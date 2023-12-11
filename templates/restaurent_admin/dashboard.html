@@ -1,0 +1,864 @@
+{% extends 'restaurent_admin/base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+<!--------------- 😎 Dashborder 😎 ------------------->
+<section>
+    <div class="page-wrapper main-page">
+        <div class="page-breadcrumb container-fluid responsive_container">
+            <div class="shadowTotal mt-3">
+                <div class="row">
+                    <div class="col-lg-5 px-0">
+                        <div class="rownumber">
+                            <div class="row">
+                                <div class="col-6 px-0">
+                                    <div class="text-center">
+                                        <div>
+                                            <h4><b>{{visitors}}</b></h4>
+                                            <p>Total Visits</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 px-0">
+                                    <div class="text-center visit">
+                                        <div>
+                                            <h4><b>{{order}}</b></h4>
+                                            <p>Total Orders</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-lg-4 px-0">
+                                    <div class="text-center">
+                                        <div>
+                                            <h4><b>{{category}}</b></h4>
+                                            <p class="mb-0">Total Category</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-lg-4 px-0">
+                                    <div class="text-center visit">
+                                        <div>
+                                            <h4><b>{{rname.subscritpion_expire_date}}</b></h4>
+                                            <p class="mb-0">Plan Expiration</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7 px-0">
+                        <div class=" visit2" id="div1"
+                            style="background-image: url('{% static 'images/dashboard.png' %}');">
+                            <div class="visited">
+                                <div>
+                                    <p><b>You have <span id="noti_count2"></span> unread notifications</b></p>
+                                    <a href="{% url 'receive-notification'  %}">View Notifications</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" visit3" id="div2"
+                            style='background-image: url("{% static "images/dashboard.png" %}");'>
+                            <div class="visited">
+                                <div>
+                                    <p><b>Welcome to DineQR</b></p>
+                                    <p>Your passion for food meets our dedication to innovation. DineQR provides you with valuable insights into customer preferences, helping you refine your offerings and create unforgettable dining experiences.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center my-4">
+                        <div>
+                            <h5>Category</h5>
+                        </div>
+                        <div class="dropdown dropstart dropdots2">
+                            <button class="optnbtn" data-bs-toggle="dropdown" aria-expanded="false">
+                                <b><i class="fi fi-rr-menu-dots-vertical"></i></b>
+                            </button>
+                            <ul class="dropdown-menu dropon" style="position: absolute; border-radius: 13px;">
+                                <li class="dropborder"><button class="dropdown-item" href="" onclick="return catdata()"
+                                        disabled data-bs-toggle="modal" data-bs-target="#popup5"
+                                        id="edit_cat">Edit</button>
+                                </li>
+                                <li class="dropborder"><button class="dropdown-item" id="select"
+                                        onclick="return select()">Select</button></li>
+                                <li class="dropborder"><button class="dropdown-item" id="checkAllButton"
+                                        value="Selected" onclick="return select_unselect()" disabled>Select all</button>
+                                </li>
+                                <li><button class="dropdown-item" href="" disabled id="delbutton" data-bs-toggle="modal"
+                                        data-bs-target="#popupdelete">Delete</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-item">
+                        <div class="addNew">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#popup1" class="text-dark">
+                                <div class="foodimg">
+                                    <div class="foodimg2 ">
+                                        <div class="vector">
+                                            <img src="{% static 'images\food1.png' %}" alt="">
+                                            <img class="img-top" src="{% static 'images/Vector2.png' %}" alt="">
+                                        </div>
+                                    </div>
+                                    <p>Add New</p>
+                                </div>
+                            </a>
+                        </div>
+                        {% for cats in cat %}
+                        <div class="addNew">
+                            <div class="bg-white text-center manuItem">
+                                <div class="dropdots" id="dropdots">
+                                    <input type="checkbox" id="{{cats.id}}" value="{{cats.id}}" class="checkbox">
+                                </div>
+                                <form action="{% url 'show-all-item' cats.id %}" method="get">
+                                    <input type="text" value="{{cats.id}}" name="cat_ids" hidden>
+                                    <button type="submit" style="border: 0; background: none; padding: 0; width: 100%;">
+                                        <label for="newfood" class="point">
+                                            {% if cats.category_image %}
+                                            <div>
+                                                <img class="main_image" src="{{ cats.category_image.url }}" alt="">
+                                            </div>
+                                            {% else %}
+                                            <div class="default-img">
+                                                <img src="{%  static 'images/DineQR-Logo2.png' %}" alt="">
+                                            </div>
+                                            {% endif %}
+
+                                            <div class="py-3">
+                                                <p class="clrfood m-0"><b>{{cats.category_name}}</b></p>
+                                            </div>
+                                        </label>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+{% if messages %}
+{% for message in messages %}
+<section>
+    <div id="windowPop" class="modal fade" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center pt-5">
+                    <div class="d-flex justify-content-center align-items-center" style="height: 355px;">
+                        <div class="createdbox">
+                            {% if message.tags == 'success' %}
+                            <img src="{% static 'images\check.jpg' %}" alt="">
+                            {% else %}
+                            <img src="{% static 'images/false-2061132_640.webp' %}" alt="">
+                            {% endif %}
+                            <p>{{message}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endfor %}
+{% endif %}
+<section>
+    <div id="windowPop1" class="modal fade" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center pt-5">
+                    <div class="d-flex justify-content-center align-items-center" style="height: 355px;">
+                        <div class="createdbox">
+                            <img src="{% static 'images/false-2061132_640.webp' %}" alt="">
+                            <p id="error_message"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="modal fade" id="popup1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center add-default " style="position: relative;">
+                <div class="d-flex justify-content-between p-3">
+                    <h6>New Category</h6>
+                    <p><i class="fi fi-rr-square-x" data-bs-dismiss="modal" aria-label="Close"></i></p>
+                </div>
+                <div class="pb-1 hoverableimg" data-bs-toggle="modal" data-bs-target="#popup2">
+                    <img src="{% static 'images\food1.png' %}" alt="" id="change_image">
+                </div>
+                <p class="addDefault mb-0">Add Default Category Image</p>
+                <form method="post" action="{% url 'add-category' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="text" name="category_image" id="category_image" hidden>
+                    <input type="file" name="custom_category_image" id="category_image12" hidden>
+                    <input class="addcatname" type="text" placeholder="Type Category Name here..." name="category_name"
+                        required>
+                    <div class="selectType">
+                        <label for="">Category Type:</label>
+                        <select name="cat_type" id="cat_type" required>
+                            <option value="">Select Type</option>
+                            {% for type in model.Type %}
+                            <option value="{{type.0}}">{{type.1}}</option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+                    <button type="submit" class="upgrade2">Submit</button>
+                </form>
+
+                <div class="blankspace"></div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="modal fade" id="popup5" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center " style="position: relative;">
+                <div class="d-flex justify-content-between p-3">
+                    <h6>Edit Category</h6>
+                    <p><i class="fi fi-rr-square-x" data-bs-dismiss="modal" aria-label="Close"></i></p>
+                </div>
+                <div class="py-4 hoverableimg" data-bs-toggle="modal" data-bs-target="#popup6">
+                    <img src="{% static 'images\food1.png' %}" alt="" id="category_imagee" height="80">
+                </div>
+                <p class="addDefault mb-0">Add Default Category Image</p>
+                <form method="post" action="{% url 'edit-category'  %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="text" name="change_imageee" id="change_imageee" hidden>
+                    <input type="text" name="cat_id" id="cat_id" hidden>
+                    <input class="addcatname" type="text" placeholder="Type Category Name here..." name="category_name"
+                        required id="cat_name">
+                    <div>
+                        <label for="">Category Type:</label>
+                        <select name="cat_type" id="cat_type">
+                            <option value="{{type.0}}" id="type">{{type.1}}</option>
+                            {% for type in model.Type %}
+                            <option value="{{type.0}}">{{type.1}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="upgrade2">Submit</button>
+                </form>
+                <div class="blankspace1"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Delete Pop Up -->
+<section style="margin-left: 300px;">
+    <div class="modal fade" id="popupdelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content modalheight p-4">
+                <div class="d-flex justify-content-between">
+                    <h6>Delete Category</h6>
+                    <p><i class="fi fi-rr-square-x" data-bs-dismiss="modal" aria-label="Close"></i></p>
+                </div>
+                <p>Are you sure you want to delete this category</p>
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="deletebtn" onclick="return del()"> Delete Category</button>
+                    <button type="button" class="cancelbtn" onclick="location.reload()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Edit Category Pop up -->
+<section>
+    <div class="modal fade" id="popup2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content text-center">
+                <div class="d-flex justify-content-between p-3">
+                    <h6>Select an image for your category </h6>
+                    <p><i class="fi fi-rr-square-x" data-bs-dismiss="modal" aria-label="Close"></i></p>
+                </div>
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
+                            data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
+                            aria-selected="true">Categroies</button>
+                        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
+                            type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Custom
+                            Categroies</button>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active " id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
+                        tabindex="0">
+                        <div class="row fooditem itemscroll mt-3" style="--bs-gutter-x: 0;">
+                            {% if cat_image %}
+                            {% for cat_image in cat_image %}
+                            <div class="col-3  p-0 addNew-1" data-bs-toggle="modal" data-bs-target="#popup1">
+                                <a onclick="return myimg('{{cat_image.id}}')">
+                                    <div class="food-img">
+                                        <img src="{{cat_image.image.url}}" alt="">
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"
+                        tabindex="0">
+                        <div class="row fooditem itemscroll mt-3" style="--bs-gutter-x: 0;" id="cusotn_cat">
+                            <div class="col-3 p-0 addNew-1">
+                                <div class=" food-img addcategories">
+                                    <label for="custom_cat_image"><img src="{% static 'images\Vector2.png' %}" alt="">
+                                        <input type="file" name="custom_category" id="custom_cat_image"
+                                            oninput="return custom_categoryes()">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="itemscroll itemscroll2">
+                                {% csrf_token %}
+                                <label for="custom_cat_image"><img src="{% static 'images\Vector2.png' %}" alt="" id="imageee">
+                                    <input type="file" name="custom_category"  id="custom_cat_image" required>
+                                </label>
+                                <button type="submit" class="Addbutton" data-bs-toggle="modal" data-bs-target="#popup1" class="text-dark" onclick="return replace_image()">Submit</button>
+                        </div> -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section>
+    <div class="modal fade" id="popup6" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content text-center">
+                <div class="d-flex justify-content-between p-3">
+                    <h6>Select an image for your category </h6>
+                    <p><i class="fi fi-rr-square-x" data-bs-dismiss="modal" aria-label="Close"></i></p>
+                </div>
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <button class="nav-link active" id="nav-home1-tab" data-bs-toggle="tab"
+                            data-bs-target="#nav-home1" type="button" role="tab" aria-controls="nav-home1"
+                            aria-selected="true">Categroies</button>
+                        <button class="nav-link" id="nav-profile1-tab" data-bs-toggle="tab"
+                            data-bs-target="#nav-profile1" type="button" role="tab" aria-controls="nav-profile1"
+                            aria-selected="false">Custom
+                            Categroies</button>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active " id="nav-home1" role="tabpanel"
+                        aria-labelledby="nav-home1-tab" tabindex="0">
+                        <div class="row fooditem itemscroll mt-3" style="--bs-gutter-x: 0;">
+                            {% if cat_image %}
+                            {% for cat_image in cat_image %}
+                            <div class="col-3 p-0 addNew-1" data-bs-toggle="modal" data-bs-target="#popup5">
+                                <a onclick="return myimg2('{{cat_image.id}}')">
+                                    <div class="food-img">
+                                        <img src="{{cat_image.image.url}}" alt="">
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-profile1" role="tabpanel" aria-labelledby="nav-profile1-tab"
+                        tabindex="0">
+                        <div class="row fooditem itemscroll mt-3" style="--bs-gutter-x: 0;" id="cusotn_cat1">
+                            <div class="col-3 p-0 addNew-1">
+                                <div class=" food-img addcategories">
+                                    <label for="custom_cat_image1"><img src="{% static 'images\Vector2.png' %}" alt="">
+                                        <input type="file" name="custom_category" id="custom_cat_image1"
+                                            oninput="return custom_categoryes1()">
+                                    </label>
+                                </div>
+                            </div>
+                            <!-- {% if cat_custom_image %}
+                            {% for cat_image in cat_custom_image %}
+                            <div class="col-3 p-0 addNew-1" data-bs-toggle="modal" data-bs-target="#popup5">
+
+                                <a onclick="return myimg2('{{cat_image.id}}')">
+                                    <div class="food-img">
+                                        <img src="{{cat_image.image.url}}" alt="">
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                            {% endif %} -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        $('#windowPop').modal('show');
+    });
+    $(document).ready(function () {
+        $('#windowPop1').modal('hide');
+    });
+
+    $('.close').click(function () {
+
+        $("#windowPop").modal('toggle');
+    })
+
+</script>
+<script>
+    function myimg(id) {
+
+        $.ajax({
+            type: "GET",
+            url: "/show-category-image/",
+            data: {
+                id: id,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                var a = data.cat_image
+                document.getElementById("change_image").src = data.cat_image;
+                $('#category_image').val(data.image);
+
+            }
+        });
+    }
+
+</script>
+<script>
+    function myimg2(id) {
+
+        $.ajax({
+            type: "GET",
+            url: "/show-category-image/",
+            data: {
+                id: id,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                var a = data.cat_image
+                document.getElementById("category_imagee").src = data.cat_image;
+                $('#change_imageee').val(data.image);
+
+            }
+        });
+    }
+</script>
+<script>
+    function catdata() {
+        var checkboxes = document.querySelector("input[type='checkbox']:checked");
+        var checkedCheckboxId = checkboxes.id;
+        $.ajax({
+            type: "GET",
+            url: "/category-details/",
+            data: {
+                id: checkedCheckboxId,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                document.getElementById("category_imagee").src = data.image;
+                $('#cat_name').val(data.category_name);
+                $('#type').val(data.type);
+                document.getElementById('type').innerHTML = data.type
+                $('#cat_id').val(checkedCheckboxId);
+
+            }
+        });
+    }
+</script>
+<script>
+    function select_unselect() {
+        var checkAllButton = document.getElementById("checkAllButton");
+        var delButton = document.getElementById("delbutton");
+        var edit_cat = document.getElementById("edit_cat");
+
+        // Get references to all the checkboxes
+        var checkboxes = document.querySelectorAll("input[type='checkbox']");
+        if (checkAllButton.value == 'Selected') {
+            // Add a click event listener to the button
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = true;
+            });
+            if (checkboxes.length == 1) {
+                edit_cat.disabled = false;
+            }
+            // Enable the delete button
+            delButton.disabled = false;
+            checkAllButton.value = 'Deselected';
+            checkAllButton.innerHTML = "Deselect all"
+        }
+
+        else {
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = false;
+            });
+            if (checkboxes.length == 1) {
+                edit_cat.disabled = true;
+            }
+            // Enable the delete button
+            delButton.disabled = true;
+            checkAllButton.value = 'Selected';
+            checkAllButton.innerHTML = "Select all"
+        }
+    }
+    var checkboxes = document.querySelectorAll("input[type='checkbox']");
+    checkboxes.forEach(function (checkbox) {
+        checkbox.addEventListener("change", function () {
+            // Count the number of checked checkboxes
+            var checkedCount = document.querySelectorAll("input[type='checkbox']:checked").length;
+            var delButton = document.getElementById("delbutton");
+            var checkAllButton = document.getElementById("checkAllButton");
+            var edit_cat = document.getElementById("edit_cat");
+            if (checkedCount == 1) {
+                edit_cat.disabled = false;
+            }
+            else {
+                edit_cat.disabled = true;
+            }
+            if (checkedCount >= 1) {
+                delButton.disabled = false;
+            }
+            else {
+                delButton.disabled = true;
+            }
+            if (checkedCount == checkboxes.length) {
+                checkAllButton.value = 'Dselected';
+                checkAllButton.innerHTML = "deselect all"
+            }
+            else {
+                checkAllButton.value = 'Selected';
+                checkAllButton.innerHTML = "Select all"
+            }
+
+        });
+    });
+    function del() {
+        var checkboxes = document.querySelectorAll("input[type='checkbox']");
+        var checkedIds = [];
+
+        // Loop through each checkbox and check if it's checked
+        checkboxes.forEach(function (checkbox) {
+            if (checkbox.checked) {
+                checkedIds.push(checkbox.id);
+
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "/delete-category/",
+            data: {
+                checkid: JSON.stringify(checkedIds),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                document.getElementById('popupdelete').style.display = 'none';
+                $(document).ready(function () {
+                    $('#windowPop1').modal('show');
+                });;
+                document.getElementById('error_message').innerHTML = data.msg;
+                setTimeout(function () {
+                    location.reload();
+                }, 2000);
+            }
+        });
+
+    }
+</script>
+<script>
+    function select() {
+        var checkboxes = document.querySelectorAll("input[type='checkbox']");
+
+        // Loop through each checkbox and check if it's checked
+        checkboxes.forEach(function (checkbox) {
+            document.getElementById(checkbox.id).style.setProperty("display", "block", "important");
+
+        });
+        document.getElementById('checkAllButton').disabled = false;
+    }
+</script>
+<script>
+    const divsToReplace = document.querySelectorAll('.visit2, .visit3');
+    let currentIndex = 0;
+    let intervalId;
+    function replaceDiv() {
+        divsToReplace[currentIndex].style.display = 'none';
+        currentIndex = (currentIndex + 1) % divsToReplace.length;
+        divsToReplace[currentIndex].style.display = 'block';
+    }
+
+    function startInterval() {
+        intervalId = setInterval(replaceDiv, 1500);
+    }
+
+    // Start the interval when the page loads
+    startInterval();
+
+    // Pause the interval when hovering
+    divsToReplace.forEach((div) => {
+        div.addEventListener('mouseover', () => {
+            clearInterval(intervalId);
+        });
+
+        div.addEventListener('mouseout', () => {
+            startInterval();
+        });
+    });
+</script>
+<script>
+    // Automatically close the Bootstrap modal after 2 seconds (2000 milliseconds)
+    setTimeout(function () {
+        $('#windowPop').modal('hide');
+    }, 2000);
+</script>
+<script>
+    $.ajax({
+        type: "GET",
+        url: "/custom-image-category/",
+        data: {
+        },
+        success: function (context) {
+            var foodContainer = document.getElementById("cusotn_cat");
+            context.data.forEach(function (item) {
+                // alert(item.id)
+                var foodDiv = document.createElement("div");
+                foodDiv.className = "col-3 p-0 addNew-1";
+                foodDiv.innerHTML = '<div >' + '<a onclick="return myimg(' + item.id + ')">' + '<div class="food-img">' + '<i class="fas fa-trash-alt" onclick ="return del_cat(' + item.id + ')"></i>' + '<img src="' + item.image + '" alt="" data-bs-toggle="modal" data-bs-target="#popup1">' + '</div>' + '</a>' + '</div>'
+
+
+                foodContainer.appendChild(foodDiv);
+            });
+        }
+    });
+</script>
+<script>
+    $.ajax({
+        type: "GET",
+        url: "/custom-image-category/",
+        data: {
+        },
+        success: function (context) {
+            var foodContainer = document.getElementById("cusotn_cat1");
+            context.data.forEach(function (item) {
+                // alert(item.id)
+                var foodDiv = document.createElement("div");
+                foodDiv.className = "col-3 p-0 addNew-1";
+                foodDiv.innerHTML = '<div >' + '<a onclick="return myimg2(' + item.id + ')">' + '<div class="food-img">' + '<i class="fas fa-trash-alt" onclick ="return del_cat1(' + item.id + ')"></i>' + '<img src="' + item.image + '" alt="" data-bs-toggle="modal" data-bs-target="#popup5">' + '</div>' + '</a>' + '</div>'
+
+
+                foodContainer.appendChild(foodDiv);
+            });
+        }
+    });
+</script>
+<script>
+    function custom_categoryes() {
+        var image = document.getElementById('custom_cat_image').files[0];
+        var formData = new FormData();
+        formData.append('imagePath', image);
+        formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+
+        $('#cusotn_cat').html(' ')
+        $.ajax({
+            type: "POST",
+            url: "/custom-image-category/",
+            processData: false,
+            contentType: false,
+            mimeType: "multipart/form-data",
+            data: formData,
+            success: function (data) {
+                $.ajax({
+                    type: "GET",
+                    url: "/custom-image-category/",
+                    data: {
+                    },
+                    success: function (context) {
+
+                        var foodContainer = document.getElementById("cusotn_cat");
+                        var foodDiv1 = document.createElement("div");
+                        foodDiv1.className = "col-3 p-0 addNew-1";
+                        foodDiv1.innerHTML = '<div class=" food-img addcategories"> <label for="custom_cat_image"><img src="{% static "images\Vector2.png" %}" alt=""><input type="file" name="custom_category" id="custom_cat_image"oninput="return custom_categoryes()" multiple></label></div>'
+                        foodContainer.appendChild(foodDiv1);
+                        context.data.forEach(function (item) {
+                            var foodDiv = document.createElement("div");
+                            foodDiv.className = "col-3 p-0 addNew-1";
+                            foodDiv.innerHTML = '<div >' + '<a onclick="return myimg(' + item.id + ')">' + '<div class="food-img">' + '<i class="fas fa-trash-alt" onclick ="return del_cat(' + item.id + ')"></i>' + '<img src="' + item.image + '" alt="" data-bs-toggle="modal" data-bs-target="#popup1">' + '</div>' + '</a>' + '</div>'
+
+
+                            foodContainer.appendChild(foodDiv);
+                        });
+                        $('#cusotn_cat').innerHTML('show')
+                    }
+                });
+            }
+        });
+    }
+    function del_cat(id) {
+        var confirmation = confirm("Are you sure you want to delete this category?");
+        if (confirmation) {
+            $('#cusotn_cat').html(' ')
+            $.ajax({
+                type: "POST",
+                url: "/delete-custom-category/",
+                data: {
+                    id: id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function (data) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/custom-image-category/",
+                        data: {
+                        },
+                        success: function (context) {
+
+                            var foodContainer = document.getElementById("cusotn_cat");
+                            var foodDiv1 = document.createElement("div");
+                            foodDiv1.className = "col-3 p-0 addNew-1";
+                            foodDiv1.innerHTML = '<div class=" food-img addcategories"> <label for="custom_cat_image"><img src="{% static "images\Vector2.png" %}" alt=""><input type="file" name="custom_category" id="custom_cat_image"oninput="return custom_categoryes()"></label></div>'
+                            foodContainer.appendChild(foodDiv1);
+                            context.data.forEach(function (item) {
+                                var foodDiv = document.createElement("div");
+                                foodDiv.className = "col-3 p-0 addNew-1";
+                                foodDiv.innerHTML = '<div >' + '<a onclick="return myimg(' + item.id + ')">' + '<div class="food-img">' + '<i class="fas fa-trash-alt" onclick ="return del_cat(' + item.id + ')"></i>' + '<img src="' + item.image + '" alt="" data-bs-toggle="modal" data-bs-target="#popup1">' + '</div>' + '</a>' + '</div>'
+
+
+                                foodContainer.appendChild(foodDiv);
+                            });
+                            $('#cusotn_cat').innerHTML('show')
+                        }
+                    });
+                }
+            });
+        }
+    }
+    function custom_categoryes1() {
+        var image = document.getElementById('custom_cat_image1').files[0];
+        var formData = new FormData();
+        formData.append('imagePath', image);
+        formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+
+        $('#cusotn_cat1').html(' ')
+        $.ajax({
+            type: "POST",
+            url: "/custom-image-category/",
+            processData: false,
+            contentType: false,
+            mimeType: "multipart/form-data",
+            data: formData,
+            success: function (data) {
+                $.ajax({
+                    type: "GET",
+                    url: "/custom-image-category/",
+                    data: {
+                    },
+                    success: function (context) {
+
+                        var foodContainer = document.getElementById("cusotn_cat1");
+                        var foodDiv1 = document.createElement("div");
+                        foodDiv1.className = "col-3 p-0 addNew-1";
+                        foodDiv1.innerHTML = '<div class=" food-img addcategories"> <label for="custom_cat_image1"><img src="{% static "images\Vector2.png" %}" alt=""><input type="file" name="custom_category" id="custom_cat_image1"oninput="return custom_categoryes1()" multiple></label></div>'
+                        foodContainer.appendChild(foodDiv1);
+                        context.data.forEach(function (item) {
+                            var foodDiv = document.createElement("div");
+                            foodDiv.className = "col-3 p-0 addNew-1";
+                            foodDiv.innerHTML = '<div >' + '<a onclick="return myimg2(' + item.id + ')">' + '<div class="food-img">' + '<i class="fas fa-trash-alt" onclick ="return del_cat1(' + item.id + ')"></i>' + '<img src="' + item.image + '" alt="" data-bs-toggle="modal" data-bs-target="#popup5">' + '</div>' + '</a>' + '</div>'
+
+
+                            foodContainer.appendChild(foodDiv);
+                        });
+                        $('#cusotn_cat1').innerHTML('show')
+                    }
+                });
+            }
+        });
+    }
+    function del_cat1(id) {
+        var confirmation = confirm("Are you sure you want to delete this category?");
+        if (confirmation) {
+            $('#cusotn_cat1').html(' ')
+            $.ajax({
+                type: "POST",
+                url: "/delete-custom-category/",
+                data: {
+                    id: id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function (data) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/custom-image-category/",
+                        data: {
+                        },
+                        success: function (context) {
+
+                            var foodContainer = document.getElementById("cusotn_cat1");
+                            var foodDiv1 = document.createElement("div");
+                            foodDiv1.className = "col-3 p-0 addNew-1";
+                            foodDiv1.innerHTML = '<div class=" food-img addcategories"> <label for="custom_cat_image1"><img src="{% static "images\Vector2.png" %}" alt=""><input type="file" name="custom_category" id="custom_cat_image1"oninput="return custom_categoryes1()"></label></div>'
+                            foodContainer.appendChild(foodDiv1);
+                            context.data.forEach(function (item) {
+                                var foodDiv = document.createElement("div");
+                                foodDiv.className = "col-3 p-0 addNew-1";
+                                foodDiv.innerHTML = '<div >' + '<a onclick="return myimg2(' + item.id + ')">' + '<div class="food-img">' + '<i class="fas fa-trash-alt" onclick ="return del_cat1(' + item.id + ')"></i>' + '<img src="' + item.image + '" alt="" data-bs-toggle="modal" data-bs-target="#popup5">' + '</div>' + '</a>' + '</div>'
+
+
+                                foodContainer.appendChild(foodDiv);
+                            });
+                            $('#cusotn_cat1').innerHTML('show')
+                        }
+                    });
+                }
+            });
+        }
+    }
+</script>
+<script>
+    document.getElementById('custom_cat_image').addEventListener('change', function (event) {
+        var selectedImage = event.target.files[0];
+
+        if (selectedImage) {
+            var imageUrl = URL.createObjectURL(selectedImage);
+
+            var imageElement = document.getElementById('imageee');
+            imageElement.src = imageUrl;
+            document.getElementById('imageee').className = 'item_image';
+            imageElement.style.display = 'block';
+        }
+    });
+</script>
+
+<script>
+    function replace_image() {
+        var image = document.getElementById('imageee').src
+        document.getElementById('change_image').src = image
+        var fileInput1 = document.getElementById('custom_cat_image');
+        var fileInput2 = document.getElementById('category_image12');
+        var selected_file = fileInput1.files[0]
+        fileInput2.files = selected_file
+
+    }
+</script>
+{% endblock %}

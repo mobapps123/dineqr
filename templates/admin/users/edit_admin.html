@@ -1,0 +1,329 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<style>
+    form input[type="file"] {
+        display: none;
+        cursor: pointer;
+
+    }
+
+    .changeimage {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .changeimage input[type=file] {
+        display: none;
+        cursor: pointer;
+    }
+
+    .changeimage img {
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .changeimage span {
+        display: inline-block;
+        position: absolute;
+        left: 20px;
+        bottom: 63px;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .changeimage span:hover {
+        background-color: rgba(0, 0, 0, .5);
+        z-index: 10000;
+        color: #fff;
+        text-decoration: none;
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 1;
+    }
+</style>
+<div class="page-wrapper wrapper_page">
+    <!-- ============================================================== -->
+    <!-- Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <div class="container-fluid fluid_container responsive_container">
+        <div>
+            <h4>Settings</h4>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 ">
+                <div class="vertical-tabs">
+                    <div class="tab borderbottom" onclick="openTab(event, 'tab1')">
+                        <button class="tablinks"><img src="{% static 'images\user-square.png' %}">
+                            &nbsp;Profile</button>
+                    </div>
+                    <div class="tab" onclick="openTab(event, 'tab2')">
+                        <button class="tablinks">
+                            <i class="fi fi-rr-lock"></i>
+                            &nbsp;Change Password</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="accountbody">
+                    <div class="tabcontent p-lg-5 p-md-4 p-sm-3" id="tab1">
+                        <div class="borderbottom1 p-xs-4">
+                            <h4 class="noti_detail">Profile</h4>
+                        </div>
+                        <div class="container-fluid">
+                            <div class="row justify-content-center">
+                                <div class="col-10 ">
+                                    <form method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="changeimage">
+                                                    <div class="form-group">
+                                                        <label for="imagechange">
+                                                            {% if request.user.restaurant_logo %}
+                                                            <img src="{{datas.restaurant_logo.url}}" alt=""
+                                                                id="imageee">
+                                                            {% else %}
+                                                            <img src="{% static 'images/default.png' %}" alt=""
+                                                                id="imageee">
+                                                            {% endif %}
+                                                            <span>Change Image</span>
+                                                            <input type="file" name="restaurant_logo" id="imagechange">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-12 text-center mt-3">
+                                                <label class="fw-bold" style="margin-top: 6col-lg-6px;"> Name:
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-6 col-md-8 col-sm-12 mt-2">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control field change_border"
+                                                        value="{{datas.full_name}}" name="full_name" id="name">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-12 text-center mt-2">
+                                                <label class="fw-bold" style="margin-top: 6col-lg-6px;">Email:
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-6 col-md-8 col-sm-12">
+                                                <div class="form-group">
+                                                    <input type="email" class="form-control field change_border"
+                                                        name="email_id" value="{{datas.email_id}}" id="email_id">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-12 text-center mt-2">
+                                                <label class="fw-bold" style="margin-top: 6col-lg-6px;">Phone
+                                                    Number: </label>
+                                            </div>
+                                            <div class="col-lg-6 col-md-8 col-sm-12">
+                                                <div class="form-group">
+                                                    <input type="number" class="form-control field change_border"
+                                                        value="{{datas.phone_number}}" name="phone_number"
+                                                        id="phone_number">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-12 text-center mt-2">
+                                                <label class="fw-bold" style="margin-top: 6col-lg-6px;">Service 
+                                                    Fee: </label>
+                                            </div>
+                                            <div class="col-lg-6 col-md-8 col-sm-12">
+                                                <div class="form-group">
+                                                    <input type="number" class="form-control field change_border"
+                                                        value="{{datas.service_fee}}" name="service_fee"
+                                                        id="service_fee">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="contact-form-submint-btn-area">
+                                                    <button class="contact-form-submint-btn btn_submit">Submit</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab2" class="tabcontent passwordP p-lg-5 p-md-4 p-sm-3">
+                        <div class="borderbottom1">
+                            <h4>Change Password</h4>
+                        </div>
+                        <form action="{% url 'change-user-password' %}" method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="form-group passwordeye">
+                                        <label for="oldPassword">Old Password</label>
+                                        <input type="password" class="form-control field change_border"
+                                            name="old_password" placeholder="Enter Text" autofocus="" required
+                                            id="id_password" />
+                                        <i id="togglePassword" class=" fa fa-eye"></i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="form-group passwordeye">
+                                        <label for="newPassword">New Password</label>
+                                        <input type="password" class="form-control field change_border"
+                                            name="new_password" placeholder="Enter Text" autofocus="" required
+                                            oninput="return msg()" id="id_password1" onpaste="return false"
+                                            oncopy="return false" />
+                                        <i id="togglePassword1" class="fa fa-eye"></i>
+                                        <span id="valmessage" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="form-group passwordeye">
+                                        <label for="confirm Password">Confirm Password</label>
+                                        <input type="password" class="form-control field change_border"
+                                            oninput="return msg1()" name="confirm_password" placeholder="Enter Text"
+                                            autofocus="" required id="id_password2" onpaste="return false "
+                                            oncopy="return false" />
+                                        <i class=" fa fa-eye" id="togglePassword2"></i>
+                                        <span id="valmessage1" class=" text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="saveinfo2">
+                                        <button class="submit">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    {% if messages %}
+    {% for message in messages %}
+    {% if message.tags %}
+    <script>swal("FoodMenu!", "{{message}}", "{{message.tags}}");</script>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+</div>
+<script type="text/javascript">
+    function openTab(event, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        event.currentTarget.className += " active";
+    }
+    document.getElementById("tab1").style.display = "block";
+    document.getElementsByClassName("tablinks")[0].className += " active";
+</script>
+<script>
+    document.getElementById('imagechange').addEventListener('change', function (event) {
+        var selectedImage = event.target.files[0];
+
+        if (selectedImage) {
+            var imageUrl = URL.createObjectURL(selectedImage);
+
+            var imageElement = document.getElementById('imageee');
+            imageElement.src = imageUrl;
+            document.getElementById('imageee').className = 'item_image';
+            imageElement.style.display = 'block';
+        }
+    });
+</script>
+<script>
+    function myfun() {
+        var a = document.getElementById("id_password1").value;
+        var b = document.getElementById("id_password2").value;
+        if (a != b) {
+            return false
+        }
+    }
+</script>
+
+<script>
+    function msg1() {
+        var a = document.getElementById("id_password1").value;
+        var b = document.getElementById("id_password2").value;
+        if (a != b) {
+            if (b.length != 0) {
+                document.getElementById("valmessage1").innerHTML = "**Password did not match";
+                document.getElementById("valmessage1").style.borderColor = "red";
+            }
+            else {
+                document.getElementById("valmessage1").innerHTML = " ";
+            }
+
+        }
+        else {
+            document.getElementById("valmessage1").innerHTML = " ";
+        }
+    }
+</script>
+<script>
+    function msg() {
+        var a = document.getElementById("id_password1").value;
+        var b = document.getElementById("id_password2").value;
+        if (a == b) {
+            document.getElementById("valmessage1").innerHTML = " ";
+        }
+
+
+    }
+</script>
+<script>
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#id_password');
+
+    togglePassword.addEventListener('click', function (e) {
+        // toggle the type attribute
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        // toggle the eye slash icon
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
+<script>
+    const togglePassword1 = document.querySelector('#togglePassword1');
+    const password1 = document.querySelector('#id_password1');
+
+    togglePassword1.addEventListener('click', function (e) {
+        // toggle the type attribute
+        const type = password1.getAttribute('type') === 'password' ? 'text' : 'password';
+        password1.setAttribute('type', type);
+        // toggle the eye slash icon
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
+<script>
+    const togglePassword2 = document.querySelector('#togglePassword2');
+    const password2 = document.querySelector('#id_password2');
+
+    togglePassword2.addEventListener('click', function (e) {
+        // toggle the type attribute
+        const type = password2.getAttribute('type') === 'password' ? 'text' : 'password';
+        password2.setAttribute('type', type);
+        // toggle the eye slash icon
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% load static %}
+
+<footer>
+    <section>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="shop">
+                        <div>
+                            <a href="{% url 'mobile_home' user.id %}"><img height="40"
+                                    src="{% static 'images/DineQR-Logo2.png' %}"></a>
+                        </div>
+                        <a href="{% url 'AddToCartView' user.id %}">
+                            <div>
+                                <img src="{% static 'images/shop.png' %}" alt="">
+                                {% if addtocart == 0 %}
+                                <span class="badge1">
+                                    <p>{{addtocart}}</p>
+                                </span>
+                                {% else %}
+                                <span class="badge2">
+                                    <p>{{addtocart}}</p>
+                                </span>
+                                {% endif %}
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>

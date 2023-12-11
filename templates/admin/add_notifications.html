@@ -1,0 +1,81 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<style>
+    span.select2-selection.select2-selection--single{
+
+    border-color: #97d3e8;
+    }
+</style>
+<div class="page-wrapper wrapper_page" style="min-height: 250px;">
+    <!-- ============================================================== -->
+    <!-- Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <div class="container-fluid fluid_container responsive_container">
+        <div class="row">
+            <div>
+                {% if messages %}
+                {% for message in messages %}
+                {% if message.tags %}
+                <script>swal("FoodMenu!", "{{message}}", "{{message.tags}}");</script>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+            </div>
+            <div class="col-lg-12">
+                <div class="application-detail-heading-area">
+                    <h2 class="noti_detail">Send Notification</h2>
+                </div>
+                <div class="contact-detail-main-area main_area_contact_detail">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form class="contact-form-main-area" method="POST" id="paymentFrm"
+                                enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-lg-4 text-center">
+                                        <label class="fw-bold">Users : </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <select name="receiver" id="receiver"  class="form-control select2"
+                                                 multiple>
+                                                <option  value="">All Users</option>
+                                                {% for user in datas %}
+                                                <option class="users" value="{{user.id}}">{{user.email_id}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 text-center">
+                                        <label class="fw-bold">Description : </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <textarea class="form-control change_border" placeholder="Enter Description" required
+                                                name="description"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="contact-form-submint-btn-area">
+                                        <button class="contact-form-submint-btn btn_submit">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('.select2').select2();
+</script>
+
+
+{% endblock %}

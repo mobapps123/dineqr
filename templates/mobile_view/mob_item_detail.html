@@ -1,0 +1,418 @@
+{% extends 'mobile_view/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .Instructions textarea {
+        border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 5px 15px 0 14px;
+    min-height: 38px;
+    }
+    .description {
+        width: 100%;
+        resize: none;
+        overflow: hidden;
+
+    }
+    .price_W{
+        min-width: 114px;
+        text-align: end;
+    }
+</style>
+<main>
+    <section class="breakfastdetails">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="">
+                        <a href="{% url 'mobile_items' data.category_name.id  %}">
+                            <div class="headmobile">
+                                <img src="{%  static 'images\Arrow(1).png' %}" alt="Arrow Icon">
+                                <h6 class="text-center pt-0">{{data.food_name}}</h6>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        {% if data.food_image %}
+        <div class="fayaimg">
+            {% if data.food_image %}
+            <img src="{{data.food_image.url}}" alt="">
+            {% endif %}
+                <!-- <p>Lemonade</p> -->
+        </div>
+        {% else %}
+        <div class="fayaimgDrink" style="background-color: {{data.background_color_type}} !important; color: {{data.text_color_type}} !important;">
+            <p >{{data.food_name}}</p>
+        </div>
+        {% endif %}
+    </section>
+    <section>
+        <div class="container-fluid" style="padding-bottom: 140px; ">
+            <div class="container-fluid">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between" style="position: relative;">
+                        <div class="discountpercent ">
+                            <h4 class="pt-3 mb-0">{{data.food_name}}</h4>
+                            {% if data.discount %}
+                            <span>-{{data.discount}}%</span>
+                            {% endif %}
+                        </div>
+                        {% if data.discount != 0 %}
+                        <h4 class="pt-3 clrfood price_W"><b>{{qrimagecode.currency|default:'$'}}
+                                {{data.discountPrice|floatformat:2}}<span
+                                    class="discount-amount"><del>{{qrimagecode.currency|default:'$'}}
+                                        {{data.price|floatformat:2}}</del></b></h4>
+                        <input type="text" hidden value="{{data.discountPrice}}" name="price">
+                        {% else %}
+                        <h4 class="pt-3 clrfood price_W"><b>{{qrimagecode.currency|default:'$'}}
+                                {{data.price|floatformat:2}}</b></h4>
+                        <input type="text" hidden value="{{data.price}}" name="price">
+                        {% endif %}
+                    </div>
+                    <div class="spice mb-2" onclick="return removesss()">
+                        {% if data.category_name.cat_type == 'Food' %}
+                        <p class="mb-2"><b>Spice Level</b></p>
+                        {% if "Mild" in context %}
+                        <input class=" spicelevel1" type="button" id="inputButton" value="Mild">
+                        {% else %}
+                        <input class=" spicelevel3" disabled type="button" id="inputButton" value="Mild">
+                        {% endif %}
+
+                        {% if "Medium" in context %}
+                        <input class=" spicelevel1" type="button" id="submitButton" value="Medium">
+                        {% else %}
+                        <input class=" spicelevel3" disabled type="button" id="submitButton" value="Medium">
+                        {% endif %}
+
+                        {% if "Hot" in context %}
+                        <input class=" spicelevel1" type="button" id="resetButton" value="Hot">
+                        {% else %}
+                        <input class=" spicelevel3" disabled type="button" id="resetButton" value="Hot">
+                        {% endif %}
+                        {% if context %}
+                        <input type="text" hidden name="selected_button" id="selectedButton" required>
+                        <p class="text-danger" id="removethis" style="display: none;">*Please Select</p>
+                        {% endif %}
+                        {% else %}
+                        <p class="mb-2">Temperature</p>
+                        {% if "Cold" in context %}
+                        <input class=" spicelevel1" type="button" id="inputButton" value="Cold">
+                        {% else %}
+                        <input class=" spicelevel3" disabled type="button" id="inputButton" value="Cold">
+                        {% endif %}
+
+                        {% if "Moderate" in context %}
+                        <input class=" spicelevel1" type="button" id="submitButton" value="Moderate">
+                        {% else %}
+                        <input class=" spicelevel3" disabled type="button" id="submitButton" value="Moderate">
+                        {% endif %}
+
+                        {% if "Hot" in context %}
+                        <input class=" spicelevel1" type="button" id="resetButton" value="Hot">
+                        {% else %}
+                        <input class=" spicelevel3" disabled type="button" id="resetButton" value="Hot">
+                        {% endif %}
+                        {% if context %}
+                        <input type="text" hidden name="selected_button" id="selectedButton" required>
+                        <p class="text-danger" id="removethis" style="display: none;">*Please Select</p>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                   
+                    <div>
+                        <div>
+                            {% if data.included.all %}
+                            <div class="addon">
+                                <div class="d-flex justify-content-between" onclick="return adon()">
+                                    <h6 class="p-0"><b>What’s Included</b></h6>
+                                    <i class="fi fi-rr-angle-down" id="arrow12"></i>
+                                </div>
+                                <div>
+                                    <div class="addonitem" style="display: none;" id="addonitem1">
+                                        {% for addonec in  data.included.all %}
+                                        <div class="avocado" onclick="return add('{{addonec.id}}')"
+                                            id="add{{addonec.id}}">
+                                            <input type="checkbox" id="{{addonec.id}}" value="{{addonec.name}}"
+                                                name="includes" checked>
+                                            <div class="d-flex justify-content-center align-items-center"
+                                                style="height: 100%; ">
+                                                <label for="item11">{{addonec.name}}</label>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div>
+                                {% if data.description %}
+                                <div>
+                                    <h6><b>Description</b></h6>
+                                    <p>{{data.description}}</p>
+                                </div>
+                                {% endif %}
+                                {% if addonec %}
+                                <div>
+                                    <h6><b>Add-ons</b></h6>
+                                    <span id="Addons_alert" style="color: red;"></span>
+                                    {% for addonec in addonec %}
+                                    <div class="mt-3">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h6 class="pt-0"><b>{{addonec.group_name}}</b></h6>
+                                                <p class="optionalclr">{{addonec.instruction}}</p>
+                                            </div>
+                                            {% if addonec.group_type == 'Required' %}
+                                            <div class="Requiredbtn">
+                                                <a href="#">{{addonec.group_type}}</a>
+                                                <input type="text" hidden class="group_type" id="{{addonec.id}}" value="{{addonec.group_type}}">
+                                            </div>
+                                            {% else %}
+                                            <div class="Optionalyellowbtn">
+                                                <a href="#">{{addonec.group_type}}</a>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        {% for  adon in addonec.group.all %}
+                                        {% if adon.status == 1 %}
+                                        <div class="d-flex justify-content-between pb-2 custom_radio1">
+                                            <div>
+                                                <input class="{{addonec.id}} {{addonec.group_type}} adds_{{addonec.id}}" {% if addonec.instruction == 'select only one (1)' %} onclick="return select_one(event,'{{addonec.id}}','{{addonec.group_type}}')"  
+                                                {% endif %} id="{{adon.id}}" type="checkbox" name="addonnss" value="{{adon.id}}">
+                                                <label for="{{adon.id}}">{{adon.name}}</label>
+                                            </div>
+                                            <div>
+                                                <label for="{{adon.id}}">{{qrimagecode.currency|default:'$'}} {{adon.price|floatformat:2}}</label>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% endfor %}
+                                <!--    <div class="d-flex justify-content-between pb-2">
+                                            <div>
+                                                <input type="checkbox" id="chickenS" name="addonnss">
+                                                <label for="chickenS">Chicken Spring roll 1</label>
+                                            </div>
+                                            <div>
+                                                <label for="chickenS">$2.00</label>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="Instructions">
+                                    <h6>Instructions for Restaurant</h6>
+                                    <!-- <input type="text" name="food_instruction" id=""> -->
+                                    <textarea class="form-label form-control hide_bar12 mb-4 description" name="food_instruction" id="incluted"
+                                        rows="5" cols="70"></textarea>
+                                </div>
+                                <div>
+                                    <div class="order-add">
+                                        <div class="addorder">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="number">
+                                                        <span class="minus" onclick="return minus()" id="minus"><i
+                                                                class="fi fi-rr-minus"></i></span>
+                                                        <input type="text" value="1" name="quantity" id="quantity" readonly/>
+                                                        <span class="plus" onclick="return plus()" id="plus"><i
+                                                                class="fi fi-rr-plus"></i></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 ">
+                                                    <div class="text-end">
+                                                        <button type="submit" class="addtoorder" onclick="return sub()" data-bs-toggle="modal" data-bs-target="#popuporder">Add to order</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+<script>
+    $(document).ready(function () {
+        $('#windowPop').modal('show');
+    });
+    $('.close').click(function () {
+
+        $("#windowPop").modal('toggle');
+    })
+</script>
+<script>
+    function minus() {
+        var qty = document.getElementById('quantity').value;
+        var minus = document.getElementById('minus')
+        var plus = document.getElementById('plus')
+        if (qty == 2) {
+            minus.classList.replace('plus', 'minus')
+        }
+        if (qty <= 10) {
+            plus.classList.replace('minus', 'plus')
+        }
+    }
+    function plus() {
+        var qty = document.getElementById('quantity').value;
+        var minus = document.getElementById('minus')
+        var plus = document.getElementById('plus')
+        if (qty >= 1) {
+            minus.classList.replace('minus', 'plus')
+        }
+        if (qty == 9) {
+            plus.classList.replace('plus', 'minus')
+        }
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const inputButton = document.getElementById('inputButton');
+        const submitButton = document.getElementById('submitButton');
+        const resetButton = document.getElementById('resetButton');
+        const selectedButtonField = document.getElementById('selectedButton');
+
+        inputButton.addEventListener('click', function () {
+            selectedButtonField.value = inputButton.value;
+            inputButton.className = 'spicelevel2';
+            if (submitButton.disabled == false) {
+                submitButton.className = 'spicelevel1';
+            }
+            if (resetButton.disabled == false) {
+                resetButton.className = 'spicelevel1';
+            }
+        });
+        submitButton.addEventListener('click', function () {
+            selectedButtonField.value = submitButton.value;
+            submitButton.className = ' spicelevel2';
+            if (inputButton.disabled == false) {
+                inputButton.className = ' spicelevel1';
+            }
+            if (resetButton.disabled == false) {
+                resetButton.className = ' spicelevel1';
+
+            }
+        });
+
+        resetButton.addEventListener('click', function () {
+            selectedButtonField.value = resetButton.value;
+            resetButton.className = ' spicelevel2';
+            if (submitButton.disabled == false) {
+                submitButton.className = ' spicelevel1';
+            }
+            if (inputButton.disabled == false) {
+                inputButton.className = ' spicelevel1';
+            };
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('.minus').click(function () {
+            var $input = $(this).parent().find('input');
+            var count = parseInt($input.val()) - 1;
+            count = count < 1 ? 1 : count;
+            $input.val(count);
+            $input.change();
+            return false;
+        });
+
+        $('.plus').click(function () {
+            var $input = $(this).parent().find('input');
+            var count = parseInt($input.val()) + 1;
+            // Limit the maximum value to 10
+            count = count > 10 ? 10 : count;
+            $input.val(count);
+            $input.change();
+            return false;
+        });
+    });
+</script>
+<script>
+    function adon() {
+        var a = document.getElementById('addonitem1');
+        var arrows = document.getElementById('arrow12');
+        if (a.style.display === 'none') {
+            a.style.display = 'flex';
+            arrows.classList.replace('fi-rr-angle-down', 'fi-rr-angle-up')
+        }
+        else {
+            a.style.display = 'none'
+            arrows.classList.replace('fi-rr-angle-up', 'fi-rr-angle-down')
+        }
+    }
+</script>
+<script>
+    function add(id) {
+        var a = document.getElementById(id)
+
+        var b = document.getElementById("add" + id)
+        if (a.checked == false) {
+            a.checked = true
+            b.classList.replace('avocado2', 'avocado')
+        }
+        else {
+            a.checked = false
+            b.classList.replace('avocado', 'avocado2')
+        }
+    }
+</script>
+<script>
+    function removesss() {
+        document.getElementById('removethis').style.display = 'none'
+    }
+    function sub() {
+        var a = document.getElementById('selectedButton')
+        if (a.value == '') {
+            document.getElementById('removethis').style.display = 'block'
+        }
+        var group=document.getElementsByClassName('group_type')
+        var newAdmosList = [];
+        for(var i=0 ;i < group.length ;i++){
+            console.log(group[i].id)
+            var new_admos = document.querySelectorAll(`.adds_${group[i].id}:checked`).length;
+            // var new_admos = document.getElementsByClassName(group[i].id);
+            console.log(new_admos);
+            if (new_admos >=1 ){
+                newAdmosList.push(group[i].id)
+            }
+
+            
+        }
+        console.log(newAdmosList.length)
+        console.log(group.length)
+        if(newAdmosList.length != group.length){
+            console.log('Not equal')
+            document.getElementById('Addons_alert').innerHTML = '*Please select atleast one  required Add-ons'
+            return false;
+        }
+        
+
+    }
+</script>
+<script>
+    const textarea1 = document.getElementById('incluted');
+    textarea1.addEventListener('input', function () {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+</script>
+<script>
+    function select_one(event,idd,group_type){
+        addons = document.getElementsByClassName(idd)
+        for (let i=0;i < addons.length ; i++){
+            document.getElementById(addons[i].id).checked = false;
+        }
+        event.target.checked = true;
+    }
+</script>
+{% endblock %}

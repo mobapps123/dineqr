@@ -1,0 +1,292 @@
+{% extends 'restaurent_admin/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<section>
+    <div class="page-wrapper main-page mt-3">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <div class="container-fluid fluid_container responsive_container ">
+            <div class="row">
+                <div class="col-12">
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        {% for data in data %}
+                        <li class="nav-item" role="presentation" >
+                            <button class="nav-link {% if data.category_name == first %}active{% endif %}"
+                                id="pills-{{data.id}}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{data.id}}"
+                                type="button" role="tab" aria-controls="pills-{{data.id}}" aria-selected="true"
+                                onclick="return active('{{data.id}}')">{{data.category_name}}</button>
+                        </li>
+
+                        {% endfor %}
+                        <li>
+                            <a href="{% url 'show-all-item' 0 %}">
+                                <img src="{% static 'images\Go-to-publish.png' %}" height="50">
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="pills-tabContent" style="width: 95%;">
+                        {% for data in data %}
+
+                        <div class="tab-pane fade show {% if data.category_name == first %}active{% endif %}"
+                            id="pills-{{data.id}}" role="tabpanel" aria-labelledby="pills-{{data.id}}-tab" tabindex="0">
+                            <div class="card-item">
+                                <div class="addNew">
+                                    <a href="{% url 'add-item' data.id %}">
+                                        <div class="foodimg">
+                                            <div class="foodimg2 ">
+                                                <div class="vector">
+                                                    <img src="{% static 'images\food1.png' %}" alt="">
+                                                    <img class="img-top" src="{% static 'images/Vector2.png' %}" alt="">
+                                                </div>
+                                            </div>
+                                            <p>Add Item</p>
+                                        </div>
+                                    </a>
+                                </div>
+                                {% for cats in data.cat.all %}
+                                {% if cats.status == 'Save' %}
+                                <div class="addNew" onclick="return myid('{{cats.id}}','{{cats.category_name.id}}')">
+                                    <div class="bg-white text-center manuItem">
+                                        <input type="checkbox" class="checkboxicon kuchbhi{{data.id}}" id="{{cats.id}}"
+                                            onclick="return checkbox('{{data.id}}')" value="{{cats.id}}">
+                                        <a data-bs-toggle="modal" onclick="popup()">
+                                            <label class="point">
+                                                <div>
+                                                    {% if cats.food_image %}
+                                                    <img class="main_image" src="{{ cats.food_image.url }}" alt="">
+                                                    {% else %}
+                                                    <p><img src="{%  static 'images/no-image-icon-23483.png' %}"
+                                                            class="mt-2" height="75" alt=""></p>
+                                                    {% endif %}
+                                                </div>
+                                                <div class=" changec pt-2">
+                                                    <p class="mb-1">{{cats.food_name}}</p>
+                                                    <h6 class="clrfood">{{request.user.currency|default:'$'}} {{cats.price|floatformat:2}}</h6>
+                                                </div>
+                                            </label>
+                                        </a>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                                <div class="col-1">
+                                    <div class="dropdown dropstart dropchange">
+                                        <button class="optnbtn" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <b><i class="fi fi-rr-menu-dots-vertical"></i></b>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" onclick="return select('{{data.id}}')">Select
+                                                </a></li>
+                                            <li><button class="dropdown-item" id="checkAllButton{{data.id}}"
+                                                    onclick="return clicked('{{data.id}}')" disabled value="select">Select All</button>
+                                            </li>
+                                            <li><button class="dropdown-item" id="delbutton{{data.id}}"
+                                                    data-bs-toggle="modal" data-bs-target="#popupdelete"
+                                                    disabled>Delete</button></li>
+                                        </ul>
+                                    </div>
+                                    <a href="#"></a>
+                                </div>
+
+                            </div>
+                        </div>
+                        {% endfor %}
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="popupfood" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center ">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="foodDetails ">
+                    <div>
+                        <div style="position: relative;" id="abc123">
+                            <img src="{% static 'images\Rectangle 136.png' %}" id="change_image">
+                            <a id="myLink"><i class="fi fi-rr-pencil"></i></a>
+                        </div>
+                        <div class="px-4">
+                            <div class="text-center py-3">
+                                <h5 class="clrfood" id="foodname"></h5>
+                                <h5>{{request.user.currency|default:'$'}} <span id="price"></span></h5>
+                            </div>
+                            <div class="text-start">
+                                <h6>Description</h6>
+                                <p id="description"> </p>
+                            </div>
+                            <div class="text-start">
+                                <h6>What's included</h6>
+                                <p id="included"> </p>
+                            </div>
+                        </div>
+                        <div class="foodprice1 px-4" id="foodprice1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section style="margin-left: 300px;">
+    <div class="modal fade" id="popupdelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content modalheight p-4">
+                <div class="d-flex justify-content-between">
+                    <h6>Delete Category</h6>
+                    <p><i class="fi fi-rr-square-x" data-bs-dismiss="modal" aria-label="Close"></i></p>
+                </div>
+                <p>Are you sure you want to delete this category</p>
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="deletebtn" onclick="return del()"> Delete Category</button>
+                    <button type="button" class="cancelbtn" onclick="location.reload()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    function clicked(id) {
+        var delButton = document.getElementById("delbutton" + id);
+        var select_unselect = document.getElementById("checkAllButton" + id);
+        // Get references to all the checkboxes
+        if (select_unselect.value == 'select') {
+            var checkboxes = document.querySelectorAll(".kuchbhi" + id);
+            // Loop through each checkbox and set its checked property to true
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = true;
+            });
+            select_unselect.innerHTML = 'Unselect All'
+            select_unselect.value = 'deselect'
+            // Enable the delete button
+            delButton.disabled = false;
+        }
+        else {
+            var checkboxes = document.querySelectorAll(".kuchbhi" + id);
+            // Loop through each checkbox and set its checked property to true
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = false;
+            });
+            select_unselect.innerHTML = 'select All'
+            select_unselect.value = 'select'
+            // Enable the delete button
+            delButton.disabled = true;
+        }
+
+    }
+    function checkbox(id) {
+        var checkboxes = document.querySelectorAll(".kuchbhi" + id);
+        var delButton = document.getElementById("delbutton" + id);
+        checkboxes.forEach(function (checkbox) {
+            // Count the number of checked checkboxes
+            var checkedCount = document.querySelectorAll("input[type='checkbox']:checked").length;
+            if (checkedCount >= 1) {
+                delButton.disabled = false;
+            }
+            else {
+                delButton.disabled = true;
+            }
+        });
+    }
+
+    function del() {
+        var checkboxes = document.querySelectorAll("input[type='checkbox']");
+        var checkedIds = [];
+
+        // Loop through each checkbox and check if it's checked
+        checkboxes.forEach(function (checkbox) {
+            if (checkbox.checked) {
+                checkedIds.push(checkbox.id);
+            }
+        });
+
+
+        $.ajax({
+            type: "GET",
+            url: "/delete-item/",
+            data: {
+                checkid: JSON.stringify(checkedIds),
+                cat_id: 'hello',
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                $(document).ajaxStop(function () {
+                    window.location.reload();
+                });
+            }
+        });
+
+    }
+    function myid(idd, cidd) {
+        $.ajax({
+            type: "POST",
+            url: "/show-item/" + cidd,
+            data: {
+                cat_id: idd,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (context) {
+                document.getElementById('foodname').innerHTML = context.name;
+                document.getElementById('price').innerHTML = context.price;
+                document.getElementById('description').innerHTML = context.description;
+                if(context.image){
+                    document.getElementById("change_image").src = context.image;
+                }
+                else{
+                    document.getElementById('abc123').remove()
+                }
+                document.getElementById('included').innerHTML = context.included;
+                var linkElement = document.getElementById("myLink");
+
+                linkElement.href = context.url;
+
+                var foodContainer = document.getElementById("foodprice1");
+                context.data.forEach(function (item) {
+                    var foodDiv = document.createElement("div");
+                    foodDiv.className = "foodprice";
+                    if (item.price != 0) {
+                        foodDiv.innerHTML = '<div  class="foodprice3">'+ '<div>' + '<p >' + "{{request.user.currency|default:'$'}}"+" "+ item.price + '</p>' + 
+                            '<p class="clrfood">' + item.name + '</p>'+'</div>' + '</div>';
+                    }
+                    else {
+                        foodDiv.innerHTML ='<div  class="foodprice3">'+ '<p>' + '' + '</h5>' + '<h5 class="clrfood">'+" "+ item.name + '</p>' +'</div>';
+                    }
+
+
+                    foodContainer.appendChild(foodDiv);
+                });
+
+            }
+        });
+
+    }
+</script>
+<script>
+    function popup() {
+        $('#foodprice1').html(' ')
+        $('#popupfood').modal('show');
+    }
+</script>
+<script>
+    function select(id) {
+        var checkboxes = document.querySelectorAll('.kuchbhi' + id);
+        // Loop through each checkbox and check if it's checked
+        checkboxes.forEach(function (checkbox) {
+            document.getElementById(checkbox.id).style.setProperty("display", "block", "important");
+
+        });
+        document.getElementById('checkAllButton' + id).disabled = false;
+    }
+</script>
+
+{% endblock %}

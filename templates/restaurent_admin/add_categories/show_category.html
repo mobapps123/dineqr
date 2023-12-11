@@ -1,0 +1,91 @@
+{% extends 'restaurent_admin/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<div class="page-wrapper wrapper_page" style="min-height: 250px;  margin-top: 91px;">
+    <!-- ============================================================== -->
+    <!-- Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <div class="container-fluid fluid_container responsive_container pt-3 white_bg">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="application-detail-heading-area">
+                    <h2 class="noti_detail">List of Food Categories</h2>
+                </div>
+                <a href="{% url 'add-category' %}" class="btn btnadd mb-2">Add New</a>
+                {% if data %}
+                <div class="contact-detail-main-area main_area_contact_detail">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <!-- <div class="contact-heading-area">
+
+          </div> -->
+
+                            <div class="terms-conditions-detail-area">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered table-warning" id="example1"
+                                        style="width:98%">
+
+                                        <thead>
+                                            <tr>
+                                                <th>S.N.</th>
+                                                <th>Category</th>
+                                                <th>Created AT</th>
+                                                <th>Updated At</th>
+                                                <th>Add Item</th>
+                                                <th>Show Item</th>
+                                                <th>Action</th>
+
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {% for head in data %}
+                                            <tr>
+                                                <td>
+                                                    <a href=""> {{forloop.counter}}</a>
+                                                </td>
+                                                <td>{{head.category_name}}</td>
+                                                <td>{{head.created_at}}</td>
+                                                <td>{{head.updated_at}}</td>
+                                                
+
+                                                <td>
+                                                    <div style="display: inline-flex;">
+                                                        <a class="delbutton btn btn-warning "
+                                                        href="{% url 'edit-category' head.id %}">Edit</a>&nbsp;
+                                                        <form action="{% url 'delete-category' head.id %}" method="post"
+                                                            onclick="return confirm('Are You Sure to Delete')">
+                                                            {% csrf_token %}
+                                                            <input type="submit" class="btn btn-danger delbutton "
+                                                                value="Delete">
+                                                        
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+
+
+                                    </table>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <h4 class="text-center alert alert-warning">No Records</h4>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

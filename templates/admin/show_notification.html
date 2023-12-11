@@ -1,0 +1,100 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<style>
+  .btnadd{
+  background-color: #ff9038!important;
+  color: #fff;
+  
+}
+</style>
+<div class="page-wrapper wrapper_page" style="min-height: 250px;">
+  <!-- ============================================================== -->
+  <!-- Bread crumb and right sidebar toggle -->
+  <!-- ============================================================== -->
+  <div class="container-fluid fluid_container responsive_container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="application-detail-heading-area">
+          <h2 class="noti_detail">List of Notifications</h2>
+          <div>
+            {% for message in messages %}
+            <b style="color:#084615; margin-left: 22px;">{{message}}</b>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="col-lg-12 mb-3">
+          <a href="{% url 'sent-notification'  %}" class="btn btnadd">Send Notification</a>
+          <form action="{% url 'delete-all-notification' %}" class="d-inline float-right" method="POST" onclick="return confirm('Are You Sure to Delete all ')">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-danger" value="Delete All">
+          </form>
+        </div>
+        {% if Users %}
+        <div class="contact-detail-main-area main_area_contact_detail">
+          <div class="row">
+            <div class="col-lg-12">
+              <!-- <div class="contact-heading-area">
+
+          </div> -->
+
+              <div class="terms-conditions-detail-area">
+                <div class="table-responsive">
+                  <table class="table table-hover table-bordered table-warning" id="notification">
+
+                    <thead>
+                      <tr>
+                        <th>S.N.</th>
+                        <th>Receiver</th>
+                        <th>Descriptions</th>
+                        <th>Created at</th>
+                        <th>Read Status</th>
+                        <th>Action</th>
+
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {% for head in Users %}
+                      <tr>
+                        <td>
+                          <a href=""> {{forloop.counter}}</a>
+                        </td>
+                        <td>{{head.receiver}}</td>
+                        <td>{{head.description}}</td>
+                        <td>{{head.created_at}}</td>
+                        <td>{{head.read}}</td>
+                        <td>
+                          <form action="{% url 'delete-notification' head.id %}" method="post"
+                            onclick="return confirm('Are You Sure to Delete')">
+                            {% csrf_token %}
+                            <input type="submit" class="delbutton btn btn-danger btn-sm" value="Delete">
+                          </form>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+
+
+                  </table>
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <h4 class="text-center alert alert-warning">No Records</h4>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

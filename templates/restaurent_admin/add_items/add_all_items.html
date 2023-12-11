@@ -1,0 +1,105 @@
+{% extends 'restaurent_admin/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<!-- <div class="page-wrapper" style="min-height: 250px;"> -->
+<!-- ============================================================== -->
+<!-- Bread crumb and right sidebar toggle -->
+<!-- ============================================================== -->
+<!-- <div class="container-fluid fluid_container responsive_container pt-3 white_bg"> -->
+
+<section style="background-color: #eee; margin-top: 60px;">
+    <div class="page-wrapper">
+        <div class="page-breadcrumb container-fluid responsive_container">
+            <div class="menuitem">
+                <div class="row">
+                    <div class="col-lg-9">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="itembox">
+                                <h5>Item Details</h5>
+
+                                <div>
+                                    <label class="form-label" for="item">Item Name</label>
+                                    <input type="text" id="food_name" name="food_name" class="form-control" required />
+                                </div>
+                                <div>
+                                    <label class="form-label" for="item">Item Description</label>
+                                    <input type="text" id="description" name="description" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="itembox">
+                                <h5>Images</h5>
+                                <p>Upload Image</p>
+                                <div class="uploadbox">
+                                    <label class="upload-btn">
+                                        <input type="file" name="food_image" id="food_image" required />Upload Images</label>
+                                </div>
+                            </div>
+                            <div class="itembox">
+                                <div>
+                                    <h5>Price Details</h5>
+                                    <label class="form-label" for="item">Price Amount </label>
+                                    <input type="text" id="price" name="price" class="form-control" required />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div style="position: fixed; right: 24px; top: 85px;">
+                                    <div class="itembox">
+                                        <div class="d-flex justify-content-between">
+                                            <h5>Preview</h5>
+                                            <img width="15" height="15" src="{% static 'images/Frame 2570.png' %}">
+                                        </div>
+                                        <div class="blankimage">
+                                            <img src="{% static 'images/Rectangle 112.png' %}" alt="" id="imageee">
+                                        </div>
+                                        <div class="d-flex justify-content-between mt-2">
+                                            <h6 class="mb-0">Pricing</h6>
+                                            <h6 class="mb-0">{{request.user.currency|default:'$'}}0.00</h6>
+                                        </div>
+                                    </div>
+                                    <div class="itembox">
+                                        <h5 class="mb-0">Select Category</h5>
+                                        <div class="custom-select">
+                                            <select >
+                                                <option value=" ">
+                                                    Category</option>
+                                                {% for category in data %}
+                                                <option value="{{category.id}}">{{category.category_name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="itembox">
+                                        <button class="itembox2 publish1" value="publish" name="submit_button"
+                                            type="submit">Publish item</button>
+                                        <button class="itembox2" value="save" name="submit_button" type="submit">Save
+                                            Draft</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    document.getElementById('food_image').addEventListener('change', function(event) {
+        var selectedImage = event.target.files[0];
+        
+        if (selectedImage) {
+            var imageUrl = URL.createObjectURL(selectedImage);
+            
+            var imageElement = document.getElementById('imageee');
+            imageElement.src = imageUrl;
+            imageElement.style.display = 'block';
+        }
+    });
+</script>
+{% endblock %}

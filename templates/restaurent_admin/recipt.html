@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <section style="margin: 20px; padding: 20px;">
+        <table style="width: 100%;">
+            <tbody>
+                <tr>
+                    <table style="width: 100%;">
+                        <tbody>
+                            <tr>
+                                <td style="font-size: 30px; font-family: 800; text-align: center; padding: 20px;">DineQr</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table style="width: 100%; margin-bottom: 20px;">
+                            <tr>
+                                <th style="width: 40%; text-align: left; vertical-align: sub;">Restaurant Name:</th>
+                                <td style="width: 60%; text-align: left; vertical-align: sub;">{{users.restaurant_name}}</td>
+                            </tr>
+                            <tr>
+                                <th style="width: 40%; text-align: left; vertical-align: sub;">Restaurant Address:</th>
+                                <td style="width: 60%; text-align: left; vertical-align: sub;">{{users.restaurant_address}}, {{users.state}},{{users.country}}</td>
+                            </tr>
+                            <tr>
+                                <th style="width: 40%; text-align: left; vertical-align: sub;">Restaurant Contact Number:</th>
+                                <td style="width: 60%; text-align: left; vertical-align: sub;">{{users.phone_number}}</td>
+                            </tr>
+                            <tr>
+                                <th style="width: 40%; text-align: left; vertical-align: sub;">Receipt/order Number:</th>
+                                <td style="width: 60%; text-align: left; vertical-align: sub; color: red;"><b>{{data.id}}</b></td>
+                            </tr>
+                            <tr>
+                                <th style="width: 40%; text-align: left; vertical-align: sub;">Date/time of order:</th>
+                                <td style="width: 60%; text-align: left; vertical-align: sub;">{{data.created_at}}</td>
+                            </tr>
+                            {% if data.order_type %}
+                            <tr>
+                                <th style="width: 40%; text-align: left; vertical-align: sub;">Order type:</th>
+                                <td style="width: 60%; text-align: left; vertical-align: sub;">{{data.order_type}}</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                    <table style="width: 100%; background-color: #eaeaea; padding: 7px;">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%; text-align: left;">Item</th>
+                                <th style="width: 25%; text-align: right;">Quantity</th>
+                                <th style="width: 25%; text-align: right;">Price</th>
+                                <th style="width: 25%; text-align: right;">Total Price</th>
+                            </tr>
+                        </thead> 
+                    </table>
+                    <table style="width: 100%; padding: 7px;">
+                        <tbody>
+                            {% for order_detail in order_details %} 
+                            <tr>
+                                <td style="width: 25%; text-align: left;">{{order_detail.food_name}}</td>
+                                <td style="width: 25%; text-align: right;">{{order_detail.quantity}}</td>
+                                <td style="width: 25%; text-align: right;">{{order_detail.food_price|floatformat:2}}</td>
+                                <td style="width: 25%; text-align: right;">{{order_detail.price|floatformat:2}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <hr>
+                    <table style="width: 100%; padding: 0 7px;">
+                        <tbody>
+                            {% if user_details.tip_amount  %}
+                            <tr>
+                                <th style="width: 75%; text-align: right;">Tip:</th>
+                                <td style="width: 25%; text-align: right;">{{user_details.tip_amount|floatformat:2}}</td>
+                            </tr>
+                            {%  endif %}
+                            <tr>
+                                <th style="width: 75%; text-align: right;">Service Charge:</th>
+                                <td style="width: 25%; text-align: right;">{{service_price|floatformat:2}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table style="width: 100%; background-color: #eaeaea; padding: 7px; margin-top: 10px;">
+                        <tbody>
+                            <tr>
+                                <tr>
+                                    <th style="width: 75%; text-align: right;">Total:</th>
+                                    <td style="width: 25%; text-align: right;">{{total|floatformat:2}}</td>
+                                </tr>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table style="width: 100%; padding: 10px 0;">
+                        <tbody>
+                            <tr style="text-align: center;">
+                                <td>Thank you for your Patronage</td>
+                            </tr>
+                            <tr style="text-align: center;">
+                                <td>
+                                    <img src="http://127.0.0.1:8000/media/{{qr_code}}" alt="" height="120">
+                                </td>
+                            </tr>
+                            <tr style="text-align: center;">
+                                <td>*************************************</td>
+                            </tr>
+                            <tr style="text-align: center;">
+                                <td>DineQr, Elevate your dining experience.</td>
+                            </tr>
+                            <tr style="text-align: center;">
+                                <td><a href="https://dineqr.io/" style="color: #000; ">DineQr.io</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table>
+
+                    </table>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</body><script>
+    window.print()
+    // setTimeout(function() {
+    //     window.location.href = '{% url  "order_history" %}';
+    // }, 1000);
+</script>
+</html> 

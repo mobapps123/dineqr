@@ -1,0 +1,97 @@
+{% extends 'mobile_view/base.html' %}
+{% load static %}
+{% block content %}
+
+<main>
+    <section class="breakfastdetails">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <a href="{% url 'mobile_home' cat.user_id.id %}">
+                        <div class="headmobile">
+                            <img src="{%  static 'images\Arrow(1).png' %}" alt="Arrow Icon">
+                            <h6 class="text-center pt-0">{{cat.category_name}}</h6>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="toppp1">
+        {% for data in data %}
+        <div class="toppp">
+            <a {% if data.is_active == 1 %} href="{% url 'mob_Item_details' data.id %}" {% endif %} >
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    {% if data.food_image %}
+                    <div class="breakfastitem dic-option">
+                        {% if data.food_image %}
+                        <img src="{{data.food_image.url}}" class="fooditemimage" {% if  data.is_active == 0 %} style="filter: grayscale(1);" {% endif %}>
+                        {% else %}
+                        <img src="{%  static 'images/no-image-icon-23483.png' %}" {% if  data.is_active == 0 %} style="filter: grayscale(1);" {% endif %}>
+                        {% endif %}
+                        {% if data.discount %}
+                        <span  {% if data.is_active == 0 %} class="spandisable1" {% endif %} >-{{data.discount|floatformat:0}}%</span>
+                        {% endif %}
+                        
+                    </div>
+                    <div class="breakfastitem2">
+                        <h5>{{data.food_name}}</h5>
+                        {% if data.is_active == 1 %}
+                        {% if data.discount != 0 %}
+                        <h6 class="pt-1">{{user.currency|default:'$'}} {{data.discountPrice|floatformat:2}}</h6>
+                        <p><del>{{user.currency|default:'$'}} {{data.price|floatformat:2}}</del></p>
+                        {% else %}
+                        <h6 class="pt-1">{{user.currency|default:'$'}} {{data.price|floatformat:2}}</h6>
+                        {% endif %}
+                        {% else %}
+                        {% if data.discount != 0 %}
+                        <p >{{user.currency|default:'$'}} {{data.discountPrice|floatformat:2}}</p>
+                        <p><del>{{user.currency|default:'$'}} {{data.price|floatformat:2}}</del></p>
+                        {% else %}
+                        <p >{{user.currency|default:'$'}} {{data.price|floatformat:2}}</p>
+                        {% endif %} 
+                        <p class="deactivate">Not Available</p>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="breakfastitem2  ps-4 py-3 dic-option1">
+                        <h5>{{data.food_name}}</h5>
+                        {% if data.discount %}
+                        <span  {% if data.is_active == 0 %} class="spandisable" {% endif %} >-{{data.discount|floatformat:0}}%</span>
+                        <!-- <span class="spandisable">10%</span> -->
+                        {% endif %}
+                        {% if data.is_active == 1 %}
+                        {% if data.discount != 0 %}
+                        <h6 class="pt-1">{{user.currency|default:'$'}} {{data.discountPrice|floatformat:2}}</h6>
+                        <h6 class="pt-1"><del>{{user.currency|default:'$'}} {{data.price|floatformat:2}}</del></h6>
+                        {% else %}
+                        <h6 class="pt-1">{{user.currency|default:'$'}} {{data.price|floatformat:2}}</h6>
+                        {% endif %}
+                        {% else %}
+                        {% if data.discount != 0 %}
+                        <h6 class="pt-1">{{user.currency|default:'$'}} {{data.discountPrice|floatformat:2}}</h6>
+                        <h6 class="pt-1"><del>{{user.currency|default:'$'}} {{data.price|floatformat:2}}</del></h6>
+                        {% else %}
+                        <h6 class="pt-1">{{user.currency|default:'$'}} {{data.price|floatformat:2}}</h6>
+                        {% endif %} 
+                        <p class="deactivate">Not Available</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="breakfastitem">
+                    <div class="breakfastitem arrowIcon">
+                        <img src="{%  static 'images\Arrow.png' %}" alt="Arrow Icon" {% if  data.is_active == 0 %}  style="filter: grayscale(1) !important;" {% endif %}>
+                    </div>
+                </div>
+            </div>
+        </a>
+        </div>
+        {% endfor %}
+    </section>
+
+</main>
+{% endblock %}

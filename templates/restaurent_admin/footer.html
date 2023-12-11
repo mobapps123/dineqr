@@ -1,0 +1,89 @@
+{% load static %}
+
+<!-- <script src="{% static 'admin/plugins/bower_components/jquery/dist/jquery.min.js' %}"></script> -->
+<!-- Bootstrap tether Core JavaScript -->
+<!-- <script src="{% static 'admin/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script> -->
+<script src="{% static 'admin/js/app-style-switcher.js' %}"></script>
+<!-- <script src="{% static 'admin/plugins/bower_components/jquery-sparkline/jquery.sparkline.min.js' %}"></script> -->
+<!--Wave Effects -->
+<script src="{% static 'admin/js/waves.js' %}"></script>
+<!--Menu sidebar -->
+<script src="{% static 'admin/js/sidebarmenu.js' %}"></script>
+<!--Custom JavaScript -->
+<script src="{% static 'admin/js/custom.js' %}"></script>
+<!--This page JavaScript -->
+<!--chartis chart-->
+<!-- <script src="{% static 'admin/plugins/bower_components/chartist/dist/chartist.min.js' %}"></script> -->
+<!-- <script src="{% static 'admin/plugins/bower_components/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js' %}"></script> -->
+<script src="{% static 'admin/js/pages/dashboards/dashboard1.js' %}"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+<!-- <script src="{% static 'admin/js/char/t.js' %}"></script> -->
+<script src="{% static 'admin/js/pie-chart.js' %}"></script>
+
+<script>
+$(document).ready(function () {
+    $('.counter-value').each(function () {
+        $(this).prop('Counter', 0).animate({
+            Counter: $(this).text()
+        }, {
+            duration: 3500,
+            easing: 'swing',
+            step: function (now) {
+                $(this).text(Math.ceil(now));
+            }
+        });
+    });
+});
+</script>
+<script>
+
+$(document).ready(function () {
+    $(".onclickmenu").click(function () {
+        $(".clickShowmenu").toggle();
+    });
+
+    $(".onclickmenu2").click(function () {
+        $(".clickShowmenu2").toggle();
+    });
+    $(".onclickmenu3").click(function () {
+        $(".clickShowmenu3").toggle();
+    });
+    $(".onclickmenu4").click(function () {
+        $(".clickShowmenu4").toggle();
+    });
+    $(".onclickmenu5").click(function () {
+        $(".clickShowmenu5").toggle();
+    });
+    $(".onclickmenu6").click(function () {
+        $(".clickShowmenu6").toggle();
+    });
+});
+</script>
+
+<script>   
+function openNav() {
+    document.getElementById('sidedis').style.width="280px";
+    document.getElementById('sidedis').style.display="block";
+    document.getElementById('sidedis').style.transition="1s";
+    document.getElementById('opentab').style.display="none"
+    document.getElementById('closetab').style.display="block"
+}
+function closeNav() {
+    document.getElementById('sidedis').style.width="0";
+    document.getElementById('sidedis').style.display="none";
+    document.getElementById('closetab').style.display="none"
+    document.getElementById('opentab').style.display="block"
+}
+
+</script>
+<!-- <script>
+    document.cookie = "username=John; expires=365";
+    setTimeout(function () {
+        location.reload();
+    }, 10000); // 300,000 milliseconds = 5 minutes
+</script> -->
+
+</body>
+
+</html>

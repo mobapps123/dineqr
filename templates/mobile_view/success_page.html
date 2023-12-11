@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/FavIcon.png' %}">
+    <link rel="stylesheet" href="{% static 'admin/css/mob_view.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-solid-straight/css/uicons-solid-straight.css'>
+    <link rel='stylesheet'
+        href='https://cdn-uicons.flaticon.com/uicons-regular-straight/css/uicons-regular-straight.css'>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <style>
+        .fi-ss-star {
+            color: #fab012;
+        }
+
+        .loginclr1 {
+            color: #223d1c;
+        }
+
+        .review {
+            padding: 0 10px 100px 9px;
+        }
+
+        .star {
+            padding: 0 4px;
+        }
+
+        .sentbtn {
+            border: 0;
+            background-color: #ec3724;
+            color: #fff;
+            padding: 4px;
+            border-radius: 10px;
+            width: 20%;
+            margin: 0 0 0 auto;
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <div class="addYourMeal">
+            <div class="thumb">
+                <img height="150" src="{% static 'images/Thumbs Up.png' %}" alt="">
+            </div>
+            <div class="ordersuccess">
+                <h4><b>Your order is successful!</b></h4>
+                <p>Your order has been registered, here is<br> your order number.</p>
+                <h4 class="loginclr1">Order #{{order_id}}</h4>
+            </div>
+
+            <div class="m-3">
+                <div class="rating">
+                    <h6 class="pt-0"><b>Rate Our Services</b></h6>
+                    <div class="stars rating" id="stars">
+                        <span class="star" data-rating="1" onclick="return rating('1','{{order_id}}')" id="star1"><i
+                                class="fi fi-rr-star" id="star11"></i></span>
+                        <span class="star" data-rating="2" onclick="return rating('2','{{order_id}}')" id="star2"><i
+                                class="fi fi-rr-star" id="star12"></i></span>
+                        <span class="star" data-rating="3" onclick="return rating('3','{{order_id}}')" id="star3"><i
+                                class="fi fi-rr-star" id="star13"></i></span>
+                        <span class="star" data-rating="4" onclick="return rating('4','{{order_id}}')" id="star4"><i
+                                class="fi fi-rr-star" id="star14"></i></span>
+                        <span class="star" data-rating="5" onclick="return rating('5','{{order_id}}')" id="star5"><i
+                                class="fi fi-rr-star" id="star15"></i></span>
+                    </div>
+                </div>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="container-fluid">
+                    <div class="review">
+
+                        <!-- <h6 class="pt-0">Review</h6>
+                        <textarea name="review" rows="5" required></textarea>
+                        <input type="text" hidden value="{{order_id}}" name="order_id">
+                        <button type="submit" class="sentbtn">Sent</button> -->
+                        <input type="text" hidden value="{{order_id}}" name="order_id">
+                        <textarea name="review" placeholder="Leave a Comment" onfocus="this.placeholder=''"
+                            onblur="this.placeholder='Leave a Comment'" on rows="5"></textarea>
+                    </div>
+                </div>
+                <div class="backmenu2">
+                    <div class="backmenu text-center">
+                        <button value="submit">Done</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('input[type="radio"]').click(function () {
+                var rating = $(this).val();
+                $(".selected-rating").text(rating + " stars");
+            });
+        });
+    </script>
+
+    <!-- <script>
+        function rating(rate, order_id) {
+            star1 = document.getElementById('star1')
+            star2 = document.getElementById('star2')
+            star3 = document.getElementById('star3')
+            star4 = document.getElementById('star4')
+            star5 = document.getElementById('star5')
+            if (rate == 1) {
+                document.getElementById('star11').classList.replace('fi-rr-star', 'fi-ss-star')
+                document.getElementById('star12').classList.replace('fi-ss-star', 'fi-rr-star')
+                document.getElementById('star13').classList.replace('fi-ss-star', 'fi-rr-star')
+                document.getElementById('star14').classList.replace('fi-ss-star', 'fi-rr-star')
+                document.getElementById('star15').classList.replace('fi-ss-star', 'fi-rr-star')
+            }
+            else if (rate == 2) {
+                document.getElementById('star11').classList.replace('fi-rr-star', 'fi-ss-star')
+                document.getElementById('star12').classList.replace('fi-rr-star', 'fi-ss-star')
+                document.getElementById('star13').classList.replace('fi-ss-star', 'fi-rr-star')
+                document.getElementById('star14').classList.replace('fi-ss-star', 'fi-rr-star')
+                document.getElementById('star15').classList.replace('fi-ss-star', 'fi-rr-star')
+            }
+            else if (rate == 3) {
+                document.getElementById('star11').classList.replace('fi-rr-star', 'fi-ss-star')
+                document.getElementById('star12').classList.replace('fi-rr-star', 'fi-ss-star')
+                document.getElementById('star13').classList.replace('fi-rr-star', 'fi-ss-star')
+                document.getElementById('star14').classList.replace('fi-ss-star', 'fi-rr-star')
+                document.getElementById('star15').classList.replace('fi-ss-star', 'fi-rr-star')
+            }
+            else if (rate == 4) {
+                document.getElementById('star11').classList.replace('fi-rr-star', 'fi-ss-star')
+                document.getElementById('star12').classList.replace('fi-rr-star', 'fi-ss-star')
+                document.getElementById('star13').classList.replace('fi-rr-star', 'fi-ss-star')
+                document.getElementById('star14').classList.replace('fi-rr-star', 'fi-ss-star')
+                document.getElementById('star15').classList.replace('fi-ss-star', 'fi-rr-star')
+            }
+            else {
+                document.getElementById('star11').classList.replace('fi-rr-star', 'fi-ss-star')
+                document.getElementById('star12').classList.replace('fi-rr-star', 'fi-ss-star')
+                document.getElementById('star13').classList.replace('fi-rr-star', 'fi-ss-star')
+                document.getElementById('star14').classList.replace('fi-rr-star', 'fi-ss-star')
+                document.getElementById('star15').classList.replace('fi-rr-star', 'fi-ss-star')
+            }
+            $.ajax({
+                type: "POST",
+                url: "/rating/",
+                data: {
+                    order_id: order_id,
+                    rating: rate,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function (data) {
+                }
+            });
+
+        }
+    </script> -->
+    <script>
+        function rating(rate, order_id) {
+            for (let i = 1; i <= 5; i++) {
+                const star = document.getElementById(`star${i}`);
+                const starIcon = document.getElementById(`star1${i}`);
+
+                if (i <= rate) {
+                    starIcon.classList.replace('fi-rr-star', 'fi-ss-star');
+                } else {
+                    starIcon.classList.replace('fi-ss-star', 'fi-rr-star');
+                }
+            }
+
+            $.post("/rating/", {
+                order_id: order_id,
+                rating: rate,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            });
+        }
+    </script>
+
+</body>
+
+</html>

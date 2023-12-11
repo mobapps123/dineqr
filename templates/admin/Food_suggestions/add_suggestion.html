@@ -1,0 +1,64 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="page-wrapper wrapper_page" style="min-height: 250px;">
+    <!-- ============================================================== -->
+    <!-- Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <div class="container-fluid fluid_container responsive_container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="application-detail-heading-area">
+                    <h2 class="noti_detail">Add Subscription</h2>
+                </div>
+                <div class="contact-detail-main-area main_area_contact_detail">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form class="contact-form-main-area" method="POST" id="paymentFrm"
+                                enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-lg-4 text-center">
+                                        <label class="fw-bold" style="margin-top: 10px;">Name: </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control field change_border" name="name"
+                                                autofocus="" required >
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 text-center">
+                                        <label class="fw-bold" style="margin-top: 10px;">Type: </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <select name="type" id="receiver" required >
+                                                <option value="" >Type</option>
+                                                <option class="users" value="Food">Food</option>
+                                                <option class="users" value="Drinks">Drinks</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="contact-form-submint-btn-area">
+                                        <button class="contact-form-submint-btn btn_submit">Submit</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('.select2').select2();
+</script>
+{% endblock %}

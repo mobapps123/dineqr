@@ -1,0 +1,225 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<section class="page-wrapper wrapper_page">
+    <div class="container-fluid">
+       
+
+
+        <div class="colbox">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row justify-content-center">
+                    <div class="col-4">
+                        <div class="bannerprofile">
+                            <div class="colbox1">
+                                <div class="form-group ">
+                                    <div class="bannerimg bannerimg2 text-center" {% if datas.banner_image %} style="background-image: url({{datas.banner_image.url}}); 
+                                        background-repeat: no-repeat; background-size: cover;" {% endif %}>
+                                        <label for="banner" class="bannerimgess">
+                                            <div class="removebtn mt-3">
+                                                <label><input type="file" name="banner_image" />Upload</label>
+                                                <button type="button"
+                                                    onclick="return bannerimageremove('{{datas.id}}')">Remove</button>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="profileimg22">
+                                        <label for="profile">
+                                            <input type="file" id="profile" name="restaurant_logo">
+                                            {% if datas.restaurant_logo %}
+                                            <img src="{{datas.restaurant_logo.url}}" height="50">
+                                            {% else %}
+                                            <img src="{% static 'images/default.png' %}">
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="colbox2">
+
+                            <div class="row d-flex justify-content-between">
+                                <div class="col-lg-7">
+                                    <div class="form-group">
+                                        <label for="rest">Restaurent Name</label>
+                                        <input id="rest" placeholder="Chicken Republic" type="text"
+                                            name="restaurant_name" value="{{datas.restaurant_name}}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        <label for="number">Phone Number</label>
+                                        <input id="number" placeholder="(555) 123-4567" type="text" name="phone_number"
+                                            value="{{datas.phone_number}}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input id="email" mailto:placeholder="info@chickenrepublic.com" type="text"
+                                            name="email_id" value="{{datas.email_id}}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        <label for="country">Country</label>
+                                        <select id="country" name="country">
+                                            {% if datas.country %}
+                                            <option value="{{country_add.id}}">{{country_add.name}}</option>
+                                            {% else %}
+                                            <option value="">Select Country</option>
+                                            {% endif %}
+                                            {% for country in country %}
+                                            <option value="{{ country.id }}">{{ country.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="State">State</label>
+                                        <select id="state" name="state">
+                                            {% if datas.state %}
+                                            <option value="{{state.id}}">{{state.name}}</option>
+                                            {% else %}
+                                            <option value="">Select State</option>
+                                            {% endif %}
+                                            {% for all_state in all_state %}
+                                            <option value="{{ all_state.id }}">{{ all_state.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="City">City</label>
+                                        <select id="city" name="city">
+                                            {% if datas.state %}
+                                            <option value="{{city.id}}">{{city.name}}</option>
+                                            {% else %}
+                                            <option value="">Select City</option>
+                                            {% endif %}
+                                            {% for all_city in all_city %}
+                                            <option value="{{ all_city.id }}">{{ all_city.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="City">Zip Code</label>
+                                        <input id="zip_code" placeholder="678990" type="text" name="code"
+                                            value="{{datas.Postal_code|default:''}}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="form-group">
+                                        <label for="Address">Address</label>
+                                        <input id="Address" placeholder="123 Main Street" type="text"
+                                            name="restaurant_address" value="{{datas.restaurant_address}}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        <label for="hours">Hours of operations</label>
+                                        <div class="d-flex hours">
+                                            <input id="hours" class="me-3" placeholder="AM (08:00)" type="time" name="open_time" value="{{datas.open_time}}">
+                                            <input id="hours" placeholder="PM (10:00)" type="time" name="close_time" value="{{datas.close_time}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        <label for="hours">Hours of operations</label>
+                                        <select name="restuarant_type" id="restuarant_type">
+                                            {% for type in model.type %}
+                                            {% if typee.restaurant_type == type.0 %}
+                                            <option value="{{type.0}}" selected>{{type.1}}</option>
+                                            {% else %}
+                                            <option value="{{type.0}}">{{type.1}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="updatedbtn">
+                                    <button type="submit">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div>
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.tags %}
+        <script>swal("FoodMenu!", "{{message}}", "{{message.tags}}");</script>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+    </div>
+</section>
+<script>
+    $(document).ready(function () {
+        $('#country').change(function () {
+            var country_id = $(this).val();
+            $('#city').empty().append('<option value="">Select City</option>');
+            $.ajax({
+                url: '/get_states/',
+                type: 'GET',
+                data: { 'country_id': country_id },
+                success: function (data) {
+                    var states = data.states;
+                    $('#state').empty().append('<option value="">Select State</option>');
+                    $.each(states, function (i, state) {
+                        $('#state').append('<option value="' + state.id + '">' + state.name + '</option>');
+                    });
+                }
+            });
+        });
+
+        $('#state').change(function () {
+            var state_id = $(this).val();
+            $.ajax({
+                url: '/get_cities/',
+                type: 'GET',
+                data: { 'state_id': state_id },
+                success: function (data) {
+                    var cities = data.cities;
+                    $('#city').empty().append('<option value="">Select City</option>');
+                    $.each(cities, function (i, city) {
+                        $('#city').append('<option value="' + city.id + '">' + city.name + '</option>');
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    function bannerimageremove(idd) {
+        $.ajax({
+            type: 'POST',
+            url: '/remove-banner/',
+            data: {
+                idd: idd,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                location.reload()
+            }
+        });
+    }
+</script>
+
+
+{% endblock %}

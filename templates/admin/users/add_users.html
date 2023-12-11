@@ -1,0 +1,319 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<style>
+    .changeimage {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .changeimage input[type=file] {
+        display: none;
+        cursor: pointer;
+    }
+
+    .changeimage img {
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .changeimage span {
+        display: inline-block;
+        position: absolute;
+        left: 20px;
+        bottom: 63px;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .changeimage span:hover {
+        background-color: rgba(0, 0, 0, .5);
+        z-index: 10000;
+        color: #fff;
+        text-decoration: none;
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 1;
+    }
+</style>
+<section class="page-wrapper wrapper_page">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-10 ">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="Name"><strong>Restaurant Type</strong></label>
+                                <select name="restaurant_type" id="restaurant_type">
+                                    <option value="" style="display: none;">Select Type</option>
+                                    {% for restarant  in model.type %}
+                                    <option value="{{restarant.o}}">{{restarant.1}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="Name"><strong>Restaurant Name</strong></label>
+                                <input type="text" name="restaurant_name" id="restaurant_name" class="bg-white" placeholder="Enter name">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="Name"><strong>Restaurant's Address</strong></label>
+                                <input type="text" name="restaurant_address" id="restaurant_address" class="bg-white" placeholder="Enter name">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="Name"><strong>Full Name </strong></label>
+                                <input type="text" name="full_name" id="restaurant_address" class="bg-white" placeholder="Enter name">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="Email"><strong>Email Address</strong></label>
+                                <input type="text" name="email_id" id="email_id" class="bg-white" placeholder="Enter Email">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="Phone"><strong>Phone Number</strong></label>
+                                <input type="text" name="phone_number" id="Phone" class="bg-white" placeholder="Enter Phone">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="Phone"><strong>Country</strong></label>
+                                <select id="country" name="country" class="form-control">
+                                    <option value="">Select Country</option>
+                                    {% for country in country %}
+                                        <option value="{{ country.id }}">{{ country.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="Phone"><strong>State</strong></label>
+                                <select id="state" name="state" class="form-control">
+                                    <option value="">Select State</option>  
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="Phone"><strong>City</strong></label>
+                                <select id="city" name="city" class="form-control" >
+                                    <option value="">Select City</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="Password"><strong>Password</strong></label>
+                                <input type="password" name="Password" id="Password" class="bg-white"
+                                    placeholder="Enter Password">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="updatedbtn">
+                                <button class="Submit">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="page-wrapper wrapper_page" style="min-height: 250px;"> -->
+<!-- ============================================================== -->
+<!-- Bread crumb and right sidebar toggle -->
+<!-- ============================================================== -->
+<!--  <div class="container-fluid fluid_container responsive_container pt-3 white_bg">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="application-detail-heading-area">
+                    <h2 class="noti_detail">Add Restaurant</h2>
+                </div>
+                <div class="contact-detail-main-area main_area_contact_detail">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form class="contact-form-main-area" method="POST" id="paymentFrm"
+                                enctype="multipart/form-data" onsubmit="return onsub()">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-lg-4 text-center">
+                                        <label class="fw-bold" style="margin-top: 10px;">Restaurant Name: </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <input type="text" id="form2Example17" name="restaurant_name" required placeholder="Enter Restaurant name"
+                                                class="form-control field change_border " />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 text-center">
+                                        <label class="fw-bold" style="margin-top: 10px;">Restaurant Logo: </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <input type="file" class="form-control field change_border" alt="img" required
+                                                name="restaurant_logo" autofocus="">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 text-center">
+                                        <label class="fw-bold" style="margin-top: 10px;">Email: </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <input type="email" class="form-control field change_border" name="email_id"  placeholder="Enter Email"
+                                                autofocus="" required id="email_id">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 text-center">
+                                        <label class="fw-bold" style="margin-top: 10px;">Phone Number: </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <input type="number" class="form-control field change_border" alt="img" required placeholder="Enter Phone Number"
+                                                name="phone_number" autofocus="" id="phone_number">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 text-center">
+                                        <label class="fw-bold" style="margin-top: 10px;">Address: </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control field change_border" alt="img" required placeholder="Enter Address"
+                                                name="restaurant_address" autofocus="">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 text-center">
+                                        <label class="fw-bold" style="margin-top: 10px;">Password: </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <input type="password" class="form-control field change_border"  required placeholder="Enter Password" oninput="return myval()" id="password"
+                                                name="password" autofocus="" >
+                                            <span id="valmessage" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-12">
+                                    <div class="contact-form-submint-btn-area">
+                                        <button class="contact-form-submint-btn btn_submit">Submit</button>
+                                    </div>
+                                </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div> -->
+
+<script>
+    function onsub() {
+        var a = document.getElementById('password').value;
+        var pass_way = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+
+        if (!a.match(pass_way)) {
+            return false
+        }
+    }
+    function myval() {
+        var a = document.getElementById('password').value;
+        var pass_way = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+
+        if (!a.match(pass_way)) {
+            document.getElementById("valmessage").innerHTML = "**Password must contain at least eight characters one numebr and one alphabet"
+            return false
+        }
+        else {
+            document.getElementById("valmessage").innerHTML = " ";
+            return true
+        }
+    }
+</script>
+<script>
+    document.getElementById('imagechange').addEventListener('change', function (event) {
+        var selectedImage = event.target.files[0];
+
+        if (selectedImage) {
+            var imageUrl = URL.createObjectURL(selectedImage);
+
+            var imageElement = document.getElementById('profile_pic');
+            imageElement.src = imageUrl;
+            document.getElementById('profile_pic').className = 'item_image';
+            imageElement.style.display = 'block';
+        }
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#country').change(function () {
+            var country_id = $(this).val();
+            $('#city').empty().append('<option value="">Select City</option>');
+            $.ajax({
+                url: '/get_states/',
+                type: 'GET',
+                data: { 'country_id': country_id },
+                success: function (data) {
+                    var states = data.states;
+                    $('#state').empty().append('<option value="">Select State</option>');
+                    $.each(states, function (i, state) {
+                        $('#state').append('<option value="' + state.id + '">' + state.name + '</option>');
+                    });
+                }
+            });
+        });
+
+        $('#state').change(function () {
+            var state_id = $(this).val();
+            $.ajax({
+                url: '/get_cities/',
+                type: 'GET',
+                data: { 'state_id': state_id },
+                success: function (data) {
+                    var cities = data.cities;
+                    $('#city').empty().append('<option value="">Select City</option>');
+                    $.each(cities, function (i, city) {
+                        $('#city').append('<option value="' + city.id + '">' + city.name + '</option>');
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,951 @@
+    {% extends 'restaurent_admin/base.html' %}
+    {% load static %}
+
+
+    {% block content %}
+    <!-- <div class="page-wrapper" style="min-height: 250px;"> -->
+    <!-- ============================================================== -->
+    <!-- Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <!-- <div class="container-fluid fluid_container responsive_container pt-3 white_bg"> -->
+    <style>
+        .itembox textarea {
+            border: 1px solid #ccc;
+            background: #ece9e9;
+            border-radius: 20px;
+            padding: 5px 15px 0 14px;
+            min-height: 38px;
+
+        }
+
+        #description,
+        #incluted {
+            width: 100%;
+            resize: none;
+            overflow: hidden;
+        }
+    </style>
+
+    <section>
+        <div class="page-wrapper main-page  ">
+            <div class="page-breadcrumb container-fluid responsive_container">
+                <div class="menuitem">
+                    <form method="post" enctype="multipart/form-data" onsubmit="return Final_submit()">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <div class="itembox">
+                                    <h5>Item Details</h5>
+                                    <div>
+                                        <label class="form-label" for="item">Item Name</label>
+                                        <input type="text" id="food_name" name="food_name" class="form-control" required />
+                                    </div>
+                                    <div>
+                                        <label class="form-label" for="item">Item Description</label>
+                                        <!-- <input type="text" id="description" name="description" class="form-control"
+                                            required /> -->
+                                        <textarea class="form-label form-control hide_bar12" name="description"
+                                            id="description" rows="1" cols="70"></textarea>
+                                    </div>
+                                    <div>
+                                        <label class="form-label" for="item">What's included? <em>(optional)</em></label>
+                                        <!-- <input type="text" id="incluted" name="incluted" class="form-control"
+                                            placeholder="Example; Chicken burger, beef burger, etc." /> -->
+                                        <!-- <textarea class="form-label form-control hide_bar12" name="incluted" id="incluted"
+                                            rows="1" cols="70" placeholder="Example; Chicken burger, beef burger, etc."
+                                            onfocus="this.placeholder=''"
+                                            onblur="this.placeholder='Example; Chicken burger, beef burger, etc.'"></textarea> -->
+                                        <select name="incluted" id="incluted"  class="form-control select2"
+                                            multiple>
+                                           {% for user in suggestion %}
+                                           <option class="users" value="{{user.food_name}}" >{{user.food_name}}</option>
+                                           {% endfor %}
+                                       </select>
+                                    </div>
+                                </div>
+                                <div class="itembox">
+                                    <div>
+                                        <h5>Price Details</h5>
+                                        <label class="form-label" for="item">Price Amount </label>
+                                        <input type="number" id="price" name="price" step="0.01" class="form-control"
+                                            required />
+                                    </div>
+                                </div>
+                                <div id="all_group">
+                                    <!-- <div class="sideheading" > -->
+                                    <!-- <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h5>Side combo <span class="dineyellow">(Optional)</span></h5>
+                                                <p>pick one only</p>
+                                            </div>
+                                            <div>
+                                                <i class="fi fi-br-cross"></i>
+                                            </div>
+                                        </div>
+                                        <div class="crossbutton" >
+                                            <div class="addon-btnsecond">
+                                                <input type="checkbox" value="128" name="addonss1">
+                                                <label class="mb-0">ketchup</label>
+                                                <label class="mb-0">| ₹5</label>
+                                                <i class="fi fi-br-cross-small"></i>
+                                            </div>
+                                            
+                                        </div> -->
+                                    <!-- </div> -->
+                                </div>
+                                <div class="addItems2">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0">Add-Ons</h6>
+                                        <a onclick="addoon1()" id="create_addons">Create Add-ons</a>
+                                    </div>
+                                    <div id="RequiredOptional">
+                                        <div class="RequiredOptional2">
+                                            <div class="RequiredOptional1">
+                                                <div>
+                                                    <div>
+                                                        <input type="text" placeholder="Enter group name" name="g_name"
+                                                            id="g_name">
+                                                    </div>
+                                                    <!-- <div>
+                                                        <select name="intruction" id="mySelect">
+                                                            {% for models in model3.choice_instruction %}
+                                                            <option value="{{models.0}}">{{models.1}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div> -->
+                                                    <div>
+                                                        <ul class="Instructionbox" id="intruction_border">
+                                                            <div class="openins">
+                                                                <li style="color: #ccc;" id="instruction_heading">Enter
+                                                                    Instruction</li>
+                                                                <li><i class="fi fi-br-angle-small-down"></i></li>
+                                                            </div>
+                                                            <div class="showinstruction pt-2" id="instruction_detail">
+                                                                {% for models in model3.choice_instruction %}
+                                                                <li class="abcd1" id="add{{models.0}}"
+                                                                    onclick="return select_insturction('{{models.0}}')">
+                                                                    <label for="{{models.0}}">{{models.1}}</label>
+                                                                    <input type="radio" id="{{models.0}}"
+                                                                        name="Instructions" value="{{models.1}}">
+
+                                                                </li>
+                                                                {% endfor %}
+                                                            </div>
+                                                        </ul>
+                                                        <!-- <select>Enter Instruction
+                                                            <option value="">Select only one (1)</option>
+                                                            <option value="">Select more then one (1)</option>
+                                                        </select> -->
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <div class="d-flex">
+                                                        <input type="radio" name="optionss" id="optional" value="optional"
+                                                            checked>
+                                                        <label for="optional">Optional</label>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <input type="radio" name="optionss" id="Required1" value="Required"
+                                                            class="ms-3">
+                                                        <label for="Required1">Required</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="py-5" id="addItems2">
+                                                <div class="crossbutton" id="crossbutton">
+
+                                                </div>
+                                            </div>
+                                            <div class="groupbtn" style="display: none;" id="submit_group">
+                                                <a onclick="return addgroup()">Submit Group</a>
+                                            </div>
+                                        </div>
+                                        <div class="addItems">
+                                            <div class="d-flex ">
+                                                <div class="addonsitem me-4">
+                                                    <input type="text" placeholder="Input Add-on here" class="name"
+                                                        id="name">
+                                                    <div id="loading-button" onclick="return addons()">
+                                                        <span class="add-btn" id="text" onclick="popup1231232()">Add</span>
+                                                        <span id="loading">
+                                                            <div class="snippet" data-title="dot-typing">
+                                                                <div class="stage">
+                                                                    <div class="dot-typing"></div>
+                                                                </div>
+                                                            </div>
+                                                        </span>
+                                                    </div>
+                                                    <span class="text-danger" id="errors"></span>
+                                                </div>
+                                                <div class="addonsitem">
+                                                    <input type="number" placeholder="Input price here" class="prices"
+                                                        id="prices"
+                                                        onkeypress="return event.charCode>=48 && event.charCode<=57 && value.length<10;">
+                                                    <a onclick="return clearr()" class="add-btn2">Clear</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div>
+                                    {% if cat.cat_type == 'Food' %}
+                                    <div class="itembox">
+                                        <div class="uploadbox2" id="uploadbox5">
+                                            <label class="text-center">
+                                                <input type="file" name="food_image" id="food_image"
+                                                    class="uploadimg"><img src="{% static 'images/Group 270.png' %}"
+                                                    style="cursor: pointer" alt="" id="imageee">
+                                                <img id="uploadedImage">
+                                            </label>
+                                        </div>
+                                        <div class="d-flex justify-content-between mt-2">
+                                            <h6 class="mb-0">Pricing</h6>
+                                            <h6 class="mb-0" id="pricing">{{request.user.currency|default:'$'}} 0.00
+                                            </h6>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="itembox">
+                                        <h5 class="px-2 pb-2">Select Colors </h5>
+                                        <div class="d-flex justify-content-between align-items-center px-2">
+                                            <div>
+                                                <h6>Background Color</h6>
+                                                <input type="color" name="background_color" required>
+                                            </div>
+                                            <div class="text-end">
+                                                <h6>Text Color</h6>
+                                                <input type="color" name="text_color" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    <div class="itembox">
+                                        <h5 class="px-2 pb-2">Select Category</h5>
+                                        <div class="custom-select1">
+                                            <div class="d-flex justify-content-between"
+                                                onclick="return onshow12('cat1234')">
+                                                <h6 class="p-0 mb-0" id="select_category">{{cat.category_name}}</h6>
+                                                <img src="{% static 'images/Vector (1).png' %}" class="mt-2">
+                                            </div>
+                                            <ul class="multioption" style="display: none;" id="cat1234">
+                                                {% for category in categories %}
+                                                <li class="categoryall"
+                                                    onclick=" return showcat123(event,'{{category.id}}')">
+                                                    <label for="{{category.id}}"
+                                                        id="name{{category.id}}">{{category.category_name}}</label>
+                                                    <input type="radio" name="category" value="{{category.id}}"
+                                                        id="{{category.id}}">
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="itembox">
+                                        <h5 class="px-2 pb-2">Select Favorite </h5>
+                                        <div class="custom-select1">
+                                            <div class="d-flex justify-content-between"
+                                                onclick="return onshow12('show123345')">
+                                                <h6 class="p-0 mb-0" id="selected_favorite">Select Favorite</h6>
+                                                <img src="{% static 'images/Vector (1).png' %}" class="mt-2">
+                                            </div>
+                                            <ul class="multioption" style="display: none;" id="show123345">
+                                                {% for choice in model.top_choices %}
+                                                <li class="favoritelinks"
+                                                    onclick=" return selectfavorite(event,'{{choice.0}}')">
+                                                    <label for="{{choice.0}}">{{choice.1}}</label>
+                                                    <input type="radio" name="top_choice" value="{{choice.0}}"
+                                                        id="{{choice.0}}">
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="itembox">
+                                        <h5 class="px-2 pb-2">Select Discount</h5>
+                                        <div class="custom-select1">
+                                            <div class="d-flex justify-content-between"
+                                                onclick="return onshow12('show12334')">
+                                                <h6 class="p-0 mb-0" id="select_discount">Select Discount</h6>
+                                                <img src="{% static 'images/Vector (1).png' %}" class="mt-2">
+                                            </div>
+                                            <ul class="multioption" id="show12334" style="display: none;">
+                                                <li id="add_1" onclick="return clickdiscount('discount1')">
+                                                    <label for="option12">10%</label>
+                                                    <input type="radio" name="discount" value="10" id="option12">
+                                                </li>
+                                                <li id="add_2" onclick="return clickdiscount('discount2')">
+                                                    <label for="option2">20%</label>
+                                                    <input type="radio" name="discount" value="20" id="option2">
+                                                </li>
+                                                <li id="add_3" onclick="return clickdiscount('discount3')">
+                                                    <label for="option3">30%</label>
+                                                    <input type="radio" name="discount" value="30" id="option3">
+                                                </li>
+                                                <li id="add1" onclick="return other_discount('add')">
+                                                    <label>others</label>
+                                                </li>
+                                                <li class="inputother2 d-none" id="inputothershow">
+                                                    <label for="discountvalue1" id="discountshow"
+                                                        onclick="return clickdiscount('discount4')"></label>
+                                                    <input type="radio" name="discount" value="0" id="discountvalue1">
+                                                    &nbsp;<i class="fi fi-rr-pencil" id="pencil"
+                                                        onclick=" return other_discount('edit')"></i>
+                                                </li>
+                                                <li class="inputother" style="display: none;" id="add2">
+                                                    <input type="number" id="inputdiscount">
+                                                    <i class="fi fi-rr-paper-plane-top" onclick="return adddiscount()"></i>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="itembox">
+                                        <h5 class="mb-0">Select Discount</h5>
+                                        <div class="custom-select">
+                                            <select name="discount">
+                                                <option value="" selected style="display:none;" class="firstcolor">Select
+                                                    Discount</option>
+                                                <option value="10">10%</option>
+                                                <option value="20">20%</option>
+                                                <option value="30">30%</option>
+                                                <option value="">Others</option>
+                                            </select>
+                                        </div>
+                                    </div>  -->
+                                    <div class="itembox">
+                                        {% if cat.cat_type == 'Food' %}
+                                        <h5 class="px-2 pb-2">Spice Level Options</h5>
+                                        <div class="custom-select1">
+                                            <div class="d-flex justify-content-between" onclick="return hideshowdata()">
+                                                <h6 class="p-0 mb-0">Select Spice Level</h6>
+                                                <img src="{% static 'images/Vector (1).png' %}" class="mt-2">
+                                            </div>
+                                            <ul class="multioption" style="display: none;" id="choicesall">
+                                                {% for choice in model2.food %}
+                                                <li id="add{{choice.1}}" onclick="return clickchange('{{choice.1}}')">
+                                                    <label for="{{choice.1}}">{{choice.1}}</label>
+                                                    <input type="checkbox" name="levels" Select Favorite
+                                                        value="{{choice.0}}" id="{{choice.1}}">
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        {% else %}
+                                        <h5 class="px-2 pb-2">Temperature Option</h5>
+                                        <div class="custom-select1">
+                                            <div class="d-flex justify-content-between mt-1"
+                                                onclick="return hideshowdata()">
+                                                <h6 class="p-0">Select Temperature</h6>
+                                                <i class="fi fi-rr-angle-down" id="arrow12"></i>
+                                            </div>
+                                            <ul class="multioption" style="display: none;" id="choicesall">
+                                                {% for choice in model2.drinks %}
+                                                <li id="add{{choice.1}}" onclick="return clickchange('{{choice.1}}')">
+                                                    <label for="{{choice.1}}">{{choice.1}}</label>
+                                                    <input type="checkbox" name="levels" value="{{choice.0}}"
+                                                        id="{{choice.1}}">
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="itembox">
+                                        <button class="itembox2 publish1" value="publish" name="submit_button"
+                                            type="submit">Publish item</button>
+                                        <button class="itembox2 publish2" value="save" name="submit_button"
+                                            type="submit">Save
+                                            Draft</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <script>
+        function Final_submit(){
+            var image=document.getElementById('food_image').value
+            if(!image){
+                document.getElementById('uploadbox5').style.border = "2px solid #ec3724";
+                return false;
+            }
+        }
+    </script>
+    <script>
+        function addoon1() {
+            var a = document.getElementById('create_addons')
+            if (a.innerHTML == 'Create Add-ons') {
+                a.innerHTML = "Add new group"
+                document.getElementById('RequiredOptional').style.display = "block";
+            }
+            else {
+                a.innerHTML = "Create Add-ons"
+                document.getElementById('RequiredOptional').style.display = "none";
+
+            }
+
+        }
+    </script>
+    <script>
+        const textarea = document.getElementById('description');
+        textarea.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    </script>
+    <script>
+        document.getElementById('food_image').addEventListener('change', function (event) {
+            var selectedImage = event.target.files[0];
+
+            if (selectedImage) {
+                var imageUrl = URL.createObjectURL(selectedImage);
+
+                var imageElement = document.getElementById('imageee');
+                imageElement.src = imageUrl;
+                document.getElementById('imageee').className = 'item_image';
+                imageElement.style.display = 'block';
+            }
+        });
+    </script>
+    <script>
+        function AddonsAll(){
+            var id = 0
+            $.ajax({
+                type: "GET",
+                url: "/add-once/" + id,
+                data: {
+                },
+                success: function (context) {
+                    var foodContainer = document.getElementById("crossbutton");
+                    context.data.forEach(function (item) {
+                        var foodDiv = document.createElement("div");
+                        foodDiv.className = "crossbutton1";
+                        if (item.price) {
+                            foodDiv.innerHTML = '<div class="addon-btn1" id="add' + item.id + '<input type="checkbox" value=' + item.id + ' id=' + item.id + ' name="addonss">' + '<label class = "mb-0">' + item.name + '</label>' + ' ' + '<label class="mb-0">|' + ' ' + "{{request.user.currency|default:'$'}}" + ' ' + item.price + '</label>' + '</div>' + '<i class="fi fi-sr-cross-small"   id="label' + item.id + '" onclick="return delete_addons(' + item.id + ')"></i>'
+                        }
+                        else {
+                            foodDiv.innerHTML = '<div class="addon-btn1" id="add' + item.id +'<input type="checkbox" value=' + item.id + ' id=' + item.id + ' name="addonss" >' + '<label class = "mb-0">' + item.name + '</label>' + '</div>' + '<i class="fi fi-sr-cross-small"   id="label' + item.id + '" onclick="return delete_addons(' + item.id + ')"></i>'
+                        }
+                        foodContainer.appendChild(foodDiv);
+
+                    });
+                    document.getElementById('submit_group').style.display = ''
+                    
+                },
+            });
+        }
+    </script>
+    <script>
+        function addons() {
+            id = 0
+            var name = document.getElementById('name').value
+            if (name) {
+                let text = document.getElementById('text');
+                text.style.display = 'none';
+
+                let loading = document.getElementById('loading');
+                loading.style.display = 'block';
+
+                setTimeout(() => {
+                    text.style.display = 'block';
+                    loading.style.display = 'none';
+                    $.ajax({
+                        type: "POST",
+                        url: "/add-once/" + id,
+                        data: {
+                            name: $('#name').val(),
+                            price: $('#prices').val(),
+                            csrfmiddlewaretoken: '{{ csrf_token }}',
+                            dataType: "json",
+
+                        },
+                        success: function (context) {
+                        
+                            AddonsAll()
+                        },
+
+                    });
+                    return clearr()
+                }, 2000)
+
+
+            }
+            else {
+                document.getElementById('errors').innerHTML = '*Required'
+            }
+
+        }
+    </script>
+    <script>
+        function clearr() {
+            document.getElementById('name').value = ""
+            document.getElementById('prices').value = ""
+        }
+    </script>
+
+    <script>
+        // Get references to the input elements
+        const input1 = document.getElementById('price');
+        const input2 = document.getElementById('pricing');
+
+        // Add an input event listener to the first input
+        input1.addEventListener('input', function () {
+            // Update the value of the second input to match the first input
+            input2.innerHTML = "{{request.user.currency|default:'$'}}" + input1.value;
+        });
+    </script>
+    <script>
+        // Get a reference to the select element
+        var select = document.getElementById('mySelect');
+
+        // Add an event listener for the click event on the select element
+        select.addEventListener('click', function (e) {
+            var option = e.target;
+
+            // Toggle the selected state of the clicked option
+            option.selected = !option.selected;
+
+        });
+        select.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+        });
+    </script>
+    <script>
+        function clickchange(names) {
+            spiceid = document.getElementById(names);
+            design = document.getElementById('add' + names);
+            if (spiceid.checked == true) {
+                spiceid.checked = false;
+                design.classList.remove('selecttag')
+            }
+            else {
+                spiceid.checked = true;
+                design.classList.add('selecttag')
+            }
+
+        }
+    </script>
+    <script>
+        const selectElement = document.getElementById('selectoption');
+        selectElement.addEventListener('change', function () {
+            const selectedValue = selectElement.value;
+            window.location.href = '/add-item/' + selectedValue
+        });
+    </script>
+    <script>
+        function hideshowdata() {
+            var a = document.getElementById('choicesall')
+            if (a.style.display == 'block') {
+                a.style.display = 'none'
+
+            }
+            else {
+                a.style.display = 'block'
+                document.getElementById('show123345').style.display = 'none'
+                document.getElementById('show12334').style.display = 'none'
+                document.getElementById('cat1234').style.display = 'none'
+            }
+        }
+    </script>
+    <script>
+        function other_discount(status) {
+            if (status == 'add') {
+                document.getElementById('add1').style.display = 'none';
+
+            }
+            else {
+                document.getElementById('inputothershow').classList.add('d-none')
+            }
+            document.getElementById('add_1').classList.remove('selecttag')
+            document.getElementById('add_2').classList.remove('selecttag')
+            document.getElementById('add_3').classList.remove('selecttag')
+            document.getElementById('option12').checked = false
+            document.getElementById('option2').checked = false
+            document.getElementById('option3').checked = false
+            document.getElementById('add2').style.display = 'block'
+        }
+        function adddiscount() {
+            var discount = document.getElementById('inputdiscount').value
+            var discount4 = document.getElementById('inputothershow')
+            if (discount) {
+                document.getElementById('discountvalue1').value = discount
+                document.getElementById('discountshow').innerHTML = discount + '%'
+                discount4.classList.remove('d-none')
+                discount4.classList.add('selecttag')
+                document.getElementById('discountvalue1').checked = true
+                document.getElementById('add2').style.cssText = 'display: none !important';
+                document.getElementById('add1').style.display = 'none'
+                document.getElementById('add_1').classList.remove('selecttag')
+                document.getElementById('add_2').classList.remove('selecttag')
+                document.getElementById('add_3').classList.remove('selecttag')
+                select_discount.innerHTML = document.getElementById('discountvalue1').value + '%';
+                document.getElementById('show12334').style.display = 'none';
+            }
+        }
+        function clickdiscount(status) {
+            var discount1 = document.getElementById('add_1')
+            var discount2 = document.getElementById('add_2')
+            var discount3 = document.getElementById('add_3')
+            var discount4 = document.getElementById('inputothershow')
+            var select_discount = document.getElementById('select_discount')
+
+            if (status == 'discount1') {
+                if (document.getElementById('option12').checked == false) {
+                    document.getElementById('option12').checked = true
+                    discount2.classList.remove('selecttag')
+                    discount3.classList.remove('selecttag')
+                    discount4.classList.remove('selecttag')
+                    discount1.classList.add('selecttag')
+                    select_discount.innerHTML = document.getElementById('option12').value + '%';
+                    document.getElementById('show12334').style.display = 'none';
+                    return false
+                }
+                else {
+                    document.getElementById('option12').checked = false
+                    discount1.classList.remove('selecttag')
+                    select_discount.innerHTML = "Select Discount";
+                    document.getElementById('show12334').style.display = 'none';
+                }
+
+            }
+            if (status == 'discount2') {
+                if (document.getElementById('option2').checked == false) {
+                    discount1.classList.remove('selecttag')
+                    document.getElementById('option2').checked = true
+                    discount2.classList.add('selecttag')
+                    discount3.classList.remove('selecttag')
+                    discount4.classList.remove('selecttag')
+                    select_discount.innerHTML = document.getElementById('option2').value + '%';
+                    document.getElementById('show12334').style.display = 'none';
+                    return false
+                }
+                else {
+                    document.getElementById('option2').checked = false
+                    discount2.classList.remove('selecttag')
+                    select_discount.innerHTML = "Select Discount";
+                    document.getElementById('show12334').style.display = 'none';
+                }
+
+            }
+            if (status == 'discount3') {
+                if (document.getElementById('option3').checked == false) {
+                    discount1.classList.remove('selecttag')
+                    document.getElementById('option3').checked = true
+                    discount2.classList.remove('selecttag')
+                    discount3.classList.add('selecttag')
+                    discount4.classList.remove('selecttag')
+                    select_discount.innerHTML = document.getElementById('option3').value + '%';
+                    document.getElementById('show12334').style.display = 'none';
+                    return false
+                }
+                else {
+                    document.getElementById('option3').checked = false
+                    discount3.classList.remove('selecttag')
+                    select_discount.innerHTML = "Select Discount";
+                    document.getElementById('show12334').style.display = 'none';
+                }
+            }
+            if (status == 'discount4') {
+                if (document.getElementById('discountvalue1').checked == false) {
+                    discount4.classList.add('selecttag')
+                    document.getElementById('discountvalue1').checked = true;
+                    discount1.classList.remove('selecttag')
+                    discount2.classList.remove('selecttag')
+                    discount3.classList.remove('selecttag')
+                    select_discount.innerHTML = document.getElementById('discountvalue1').value + '%';
+                    document.getElementById('show12334').style.display = 'none';
+                    return false
+
+
+                }
+                else {
+                    document.getElementById('discountvalue1').checked = false
+                    discount4.classList.remove('selecttag')
+                    select_discount.innerHTML = "Select Discount";
+                    document.getElementById('show12334').style.display = 'none';
+                    return false
+                }
+            }
+        }
+        function onshow12(id) {
+            var a = document.getElementById(id)
+            if (a.style.display == 'none') {
+                a.style.display = ''
+                if (id == 'show12334') {
+                    document.getElementById('show123345').style.display = 'none'
+                    document.getElementById('cat1234').style.display = 'none'
+                }
+                if (id == 'show123345') {
+                    document.getElementById('show12334').style.display = 'none'
+                    document.getElementById('cat1234').style.display = 'none'
+                }
+                if (id == 'cat1234') {
+                    document.getElementById('show12334').style.display = 'none'
+                    document.getElementById('show123345').style.display = 'none'
+                }
+                document.getElementById('choicesall').style.display = 'none'
+            }
+            else {
+                a.style.display = 'none'
+            }
+        }
+    </script>
+    <script>
+        function selectfavorite(event, tabname) {
+            event.stopPropagation();
+            var tab = document.getElementById(tabname);
+            var isCurrentlyChecked = tab.checked;
+
+            // Uncheck the tab and remove the class if it's already checked
+            if (isCurrentlyChecked) {
+                tab.checked = false;
+                event.currentTarget.className = event.currentTarget.className.replace(' selecttag', '');
+                document.getElementById('selected_favorite').innerHTML = 'Select Favorite';
+                document.getElementById('show123345').style.display = 'none';
+                return false;
+            } else {
+                var i, a;
+                a = document.getElementsByClassName('favoritelinks')
+                for (i = 0; i < a.length; i++) {
+                    a[i].className = a[i].className.replace(' selecttag', '')
+                }
+                document.getElementById(tabname).checked = true;
+                event.currentTarget.className += " selecttag";
+                document.getElementById('selected_favorite').innerHTML = tabname;
+                document.getElementById('show123345').style.display = 'none';
+
+                return false;
+            }
+        }
+    </script>
+    <script>
+        function showcat123(event, name) {
+            event.stopPropagation();
+            var tab = document.getElementById(name);
+            var isCurrentlyChecked = tab.checked;
+
+            if (isCurrentlyChecked) {
+                tab.checked = false;
+                event.currentTarget.className = event.currentTarget.className.replace(' selecttag', '');
+                document.getElementById('select_category').innerHTML = '{{cat.category_name}}';
+                document.getElementById('cat1234').style.display = 'none';
+                return false;
+            }
+            else {
+                var i, a;
+                a = document.getElementsByClassName('categoryall')
+
+                for (i = 0; i < a.length; i++) {
+                    a[i].className = a[i].className.replace('selecttag', '')
+
+                }
+                document.getElementById(name).checked = true
+                event.currentTarget.className += ' selecttag'
+                document.getElementById('select_category').innerHTML = document.getElementById('name' + name).innerHTML;
+                document.getElementById('cat1234').style.display = 'none';
+                return false;
+            }
+
+
+        }
+    </script>
+    <script>
+        function popup1231232() {
+            $('#crossbutton').html(' ')
+            $('#addItems2').innerHTML('show');
+        }
+    </script>
+    <script>
+        function delete_addons(id) {
+            var cat_id = '{{cat.id}}'
+            $('#crossbutton').html(' ')
+            $.ajax({
+                type: "GET",
+                url: "/delete-add-once/" + id,
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                success: function (context) {
+                    if(context.status=='true'){
+                        AllGroups()
+                    }
+                    else{
+                        AddonsAll()
+                    }
+                    
+                },
+
+            });
+        }
+    </script>
+    <script>
+        const textarea2 = document.getElementById('description');
+        textarea2.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    </script>
+    <script>
+        const textarea1 = document.getElementById('incluted');
+        textarea1.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    </script>
+    <script>
+        function AllGroups() {
+            $('#all_group').html(' ')
+            const selectElement = document.querySelector('input[name="Instructions"]:checked');
+            $.ajax({
+                type: "GET",
+                url: "/add-ons-group/",
+                success: function (context) {
+                    var foodContainer = document.getElementById('all_group')
+                    context.data.forEach(function (item) {
+                        var foodDiv = document.createElement("div");
+
+                        foodDiv.className = "sideheading";
+                        if (item.group_type == 'optional') {
+                            foodDiv.innerHTML = '<div class="d-flex justify-content-between">' + '<div><h5>' + item.group_name + ' <span class="dineyellow">(' + item.group_type + ')</span></h5><p>' + item.instruction + '</p></div><div><i class="fi fi-br-cross" onclick="return delete_groups(' +item.id+ ')"></i></div>' + '</div>'
+                        }
+                        else {
+                            foodDiv.innerHTML = '<div class="d-flex justify-content-between">' + '<div><h5>' + item.group_name + ' <span class="dinered">(' + item.group_type + ')</span></h5><p>' + item.instruction + '</p></div><div><i class="fi fi-br-cross" onclick="return delete_groups('+item.id+')"></i></div>' + '</div>'
+                        }
+
+
+                        foodContainer.appendChild(foodDiv)
+                        var crossbuttonContainer = document.createElement("div");
+                        crossbuttonContainer.className = "crossbutton"
+                        context.data2.forEach(function (item2) {
+                            if (item2.group_id == item.id) {
+                                var foodDiv2 = document.createElement('div');
+                                if (item2.price) {
+                                    foodDiv2.innerHTML = '<div class="addon-btnsecond">' + '<input type="checkbox" name="addonss1">' + '<label class="mb-0">' + item2.name + '</label>' + ' ' + ' ' + '<label class="mb-0">| ' + "{{request.user.currency|default:'$'}}" + ' ' + item2.price + '</label>' + '<i class="fi fi-br-cross-small" onclick="return delete_addons(' + item2.id + ')"></i>' + '</div>'
+                                }
+                                else {
+                                    foodDiv2.innerHTML = '<div class="addon-btnsecond">' + '<input type="checkbox" value="128" name="addonss1">' + '<label class="mb-0">' + item2.name + '</label>' + '<i class="fi fi-br-cross-small" onclick="return delete_addons(' + item2.id + ')"  ></i>' + '</div>'
+                                }
+                                crossbuttonContainer.appendChild(foodDiv2);
+                            }
+                        });
+                        foodDiv.appendChild(crossbuttonContainer);
+                    });
+                    $('#all_group').innerHTML('show');
+                }
+            });
+            document.getElementById('create_addons').innerHTML = "Create Add-ons";
+            document.getElementById('RequiredOptional').style.display = "none";
+            document.getElementById('crossbutton').innerHTML = '';
+            document.getElementById('submit_group').style.display = 'none'
+            document.getElementById('g_name').value = '';
+            document.getElementById('g_name').placeholder = 'Enter group name';
+            document.getElementById('intruction_border').style.border = '2px solid #d6d6d6'
+            selectElement.checked = false
+            document.getElementById('add' + selectElement.value).classList.remove('instrucation_select')
+            document.getElementById('instruction_detail').style.display = 'none'
+            document.getElementById('instruction_heading').innerHTML = 'Enter Instruction'
+            document.getElementById('instruction_heading').style.color = '#ccc'
+        }
+    </script>
+    <script>
+        function delete_groups(id){
+            alert(id)
+            $.ajax({
+                type:'POST',
+                url: '/deleteGroup/'+id,
+                data:{
+                    group_id:id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success:function(context){
+                    alert()
+                    AllGroups()
+
+                }
+            })
+            
+        }
+    </script>
+    <script>
+        function addgroup() {
+            const instruction = document.querySelector('input[name="optionss"]:checked');
+            const instruction_value = instruction.value
+            const group_name = document.getElementById('g_name').value
+            const selectElement = document.querySelector('input[name="Instructions"]:checked');
+            if (group_name == '') {
+                document.getElementById('g_name').style.border = '2px solid #f31f2f'
+                return false;
+            }
+            else if (selectElement == null) {
+                document.getElementById('intruction_border').style.border = '2px solid #f31f2f'
+                document.getElementById('g_name').style.border = ''
+                return false;
+            }
+            else {
+                const selectedValue = selectElement.value;
+                
+                $.ajax({
+                    type: "POST",
+                    url: "/add-ons-group/",
+                    data: {
+                        instruction: selectedValue,
+                        selectedValue: instruction_value,
+                        group_name: group_name,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function (context) {
+                        AllGroups()
+                    }
+                });
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".Instructionbox").click(function () {
+                $(".showinstruction").toggle();
+            });
+        });
+    </script>
+    <script>
+        function select_insturction(instruction) {
+            event.stopPropagation();
+            var a = document.getElementById(instruction)
+            const elements = document.querySelectorAll('.abcd1')
+            elements.forEach(function (element) {
+                element.classList.remove('instrucation_select');
+            });
+            if (a.checked == false) {
+                a.checked = true;
+                document.getElementById('add' + instruction).classList.add('instrucation_select')
+                document.getElementById('instruction_heading').innerHTML = instruction
+                document.getElementById('instruction_heading').style.color = '#000'
+                document.getElementById('instruction_detail').style.display = 'none'
+                return false
+            }
+            else {
+                a.checked = false;
+                document.getElementById('instruction_detail').style.display = 'none'
+                document.getElementById('instruction_heading').innerHTML = 'Enter Instruction'
+                document.getElementById('instruction_heading').style.color = '#ccc'
+                return false
+            }
+        }
+    </script>
+    <!-- <script>
+        $('.select2').select2();
+    </script> -->
+    <script>
+        $(".select2").select2({
+        tags: true,
+        placeholder: 'Example; Chicken burger, beef burger, etc. ',
+        });
+       
+    </script>
+    
+    {% endblock %}

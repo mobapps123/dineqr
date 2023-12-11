@@ -1,0 +1,561 @@
+{% extends 'mobile_view/base.html' %}
+{% load static %}
+{% block content %}
+<main>
+    {% if data %}
+    <section class="breakfastdetails">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="">
+                        <a href="{% url 'mobile_home' user.id %}">
+                            <div class="headmobile">
+                                <img src="{%  static 'images\Arrow(1).png' %}" alt="Arrow Icon">
+                                <h6 class="text-center pt-0">Cart</h6>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="cartitem">
+        <div class="container-fluid">
+
+            {% for data in data %}
+            <div class="cartdetail">
+                <div class="row gx-5">
+                    {% if data.image %}
+                    <div class="col-3">
+                        <div class="cartimg">
+                            <img src="{{data.image.url}}" class="fooditemimage">
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="col-4">
+                        <div class="cartinner">
+                            <h6 class="pb-2 pt-0 m-0">{{data.name}}</h6>
+                            <h6 class="pb-2 pt-0 m-0"><b>{{user.currency|default:"$"}}
+                                    {{data.price|floatformat:2}}</b></h6>
+                            {% if data.included == 'none' %}
+                            <p><span>{{data.included}}</span></p>
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+                    <div class="col-5 d-flex justify-content-end align-items-center">
+                        <div class="number1">
+                            <!-- <span class="minus1"><i class="fi fi-rr-minus"></i></span>
+                            <input type="text" value="1" />
+                            <span class="plus1"><i class="fi fi-rr-plus"></i></span> -->
+                            <button class="minus1" id="{{data.id}}down" onClick='decreaseCount("{{data.id}}", this)'><i
+                                    class="fi fi-rr-minus"></i></button>
+                            <input type="text" value="{{data.quantity}}" readonly id="val">
+                            <button class="plus1" id="{{data.id}}up" onClick='increaseCount("{{data.id}}", this)'><i
+                                    class="fi fi-rr-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <a href="{% url 'RemoveAddtocart' data.id %}"><i class="fi fi-rr-trash"></i></a>
+
+                </div>
+            </div>
+            {% endfor %}
+            <div class="cartdetail1">
+                <h6 class="pt-0">Would you like to tip {{user.restaurant_name}}?</h6>
+                <div class="price">
+                    <input class=" pricebtn1" type="button" id="inputButton" onclick="return inputButton()"
+                        value='{{user.currency|default:"$"}} 5.00'>
+                    <input class=" pricebtn1" type="button" id="submitButton" onclick="return submitButton()"
+                        value='{{user.currency|default:"$"}} 10.00'>
+                    <input class=" pricebtn1" type="button" id="resetButton" onclick="return resetButton()"
+                        value='{{user.currency|default:"$"}} 15.00'>
+
+                </div>
+                <div class="custom mt-3">
+                    <a href="" data-bs-toggle="modal" data-bs-target="#popupmob">
+                        <p><i class="fi fi-rr-pencil"></i> &nbsp;&nbsp; Custom price</p>
+                    </a>
+                </div>
+            </div>
+            {% if restaurant_type.restaurant_type == "Restaurant" %}
+            <div class="p-3">
+                <div>
+                    <h5>What is your Order type</h5>
+                    <p class="ordertype">Let us know where you would love to dine with friends, family
+                        or just you, we got you covered which ever way</p>
+                </div>
+                <div class="mb-3 dineoption">
+                    <form>
+                        <div>
+                            <input id="radio-1" class="radio-custom" name="radio-group" type="radio" {% if mob_user.order_type == 'dine_in' %} checked      {% endif %}>
+                            <label for="radio-1" class="radio-custom-label" onclick="return chnage_order_type('dine_in')">Dine-In</label>
+                        </div>
+                        <div>
+                            <input id="radio-2" class="radio-custom"name="radio-group" type="radio" {% if mob_user.order_type == 'dine_takeaway' %} checked   {% endif %}>
+                            <label for="radio-2" class="radio-custom-label" onclick="return chnage_order_type('dine_takeaway')">Dine Takeaway</label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+            <div class="mx-3">
+                <div class="totalitem">
+                    <div class="d-flex justify-content-between ">
+                        <p class="mb-0">Selected Item ({{allquanitty}})</p>
+                        <h6 class="pt-0">{{user.currency|default:"$"}} {{total_price|floatformat:2}}</h6>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <p>Service Fee</p>
+                        <h6 class="pt-0" id="tax">{{user.currency|default:"$"}} {{rounded_number|floatformat:2}}</h6>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <p>Tip</p>
+                        <h6 class="pt-0" id="tips" value="123">{{user.currency|default:"$"}} 0.00</h6>
+                        <input type="text" hidden id="tip_value" value="0">
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p class="pt-1">Sum Total</p>
+                    <h6 class="pt-1 clrfood"><b id="sumtotal"></b></h6>
+                </div>
+            </div>
+        </div>
+        <div class="text-center checkoutbtnfix">
+            <button type="button" data-bs-toggle="modal" data-bs-target="#popupform"
+                class="cartcheckout">Checkout</button>
+        </div>
+        <section>
+            <div class="modal fade" id="popupmob" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-center ">
+                        <div class="Enter">
+                            <i class="fi fi-rr-arrow-small-left" data-bs-dismiss="modal" aria-label="Close"></i>
+                            <h6 class="pt-0">Enter Custom Amount</h6>
+                            <p><i class="fi fi-ss-square-x"></i></p>
+                        </div>
+                        <div class="d-flex justify-content-between" style="position: relative;">
+                            <div class="popupprice">
+                                <input type="number" step="0.01" placeholder='{{user.currency|default:"$"}} 0.00'
+                                    id="custom_price" required>
+                                <label for="pricee">Order Total: {{user.currency|default:"$"}}
+                                    {{total_price|floatformat:2}}</label>
+                            </div>
+                            <div class="popupprice1">
+                                <p onclick="return cross()"><i class="fi fi-br-cross-small"></i></p>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="okbtn" onclick="return custom_p()" data-bs-dismiss="modal"
+                                aria-label="Close">Ok</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="modal fade" id="popupform" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-end">
+                    <div class="modal-content modal-content2">
+                    {% if restaurant_type.restaurant_type == 'Restaurant' %}
+                    {% if distance > 100 %}
+                        <form method="post" class="p-3" action="{% url 'checkout_page' user.id %}">
+                            {% csrf_token %}
+                            <div class="checkoutForm">
+                                <label for="name">Name</label>
+                                <input type="text" name="name" id="name" required>
+                            </div>
+                            <input type="text" hidden name="total_price" id="selectedButton">
+                            <input type="text" hidden name="total_order_price" id="selectedButton1" value="{{total_price}}">
+                            <input type="text" hidden name="tip_amount" id="tip_amount">
+                            <input type="text" hidden name="range" id="range" value="Out">
+                            
+                            <div class="checkoutForm">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="checkoutForm">
+                                <label for="number">Phone Number</label>
+                                <input type="number" name="phone" id="number" required>
+                            </div>
+                            {% if mob_user.order_type == 'dine_in' %}
+                            {% if user.table_number_status == 1 %}
+                            <div class="checkoutForm">
+                                <label for="number">Table Number</label>
+                                <input type="number" name="table_number" required>
+                            </div>
+                            {% endif %}
+                            {% endif %}
+                            {% if account.is_active == False %}
+                            <input type="text" hidden  name="stipe_type" value="off">
+                            <div class="checkoutForm">
+                                <label for="number">Payment Method</label>
+                                <select class="form-select" aria-label="Default select example" name="payment_type">
+                                    <option selected style="display:none;">Open this select menu</option>
+                                    <option value="" disabled>Pay with Cards, Bank Transfer or USSD(Unavailable)</option>
+                                    <option value="2">Pay with Cash</option>
+                                </select>
+                            </div>
+                            <div class="text-center mt-3">
+                                <button  type="submit" class="cartcheckout" >Submit order</button>
+                            </div>
+                            {% else %}
+                            {% if verify == False %}
+                            <input type="text" hidden  name="stipe_type" value="off">
+                            {% endif %}
+                            <div class="checkoutForm">
+                                <label for="number">Payment Method</label>
+                                <select class="form-select" aria-label="Default select example" name="payment_type">
+                                    <option selected style="display:none;">Open this select menu</option>
+                                    {% if verify == True %}
+                                    <option value="online">Pay with Cards, Bank Transfer or USSD</option>
+                                    <option value="" disabled>Pay with Cash(Unavailable)</option>
+                                    {% else %}
+                                    <option value="" disabled>Pay with Cards, Bank Transfer or USSD(Unavailable)</option>
+                                    <option value="2">Pay with Cash</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="text-center mt-3">
+                                <button  type="submit" class="cartcheckout">Submit order</button>
+                            </div>
+                            {% endif %}
+                        </form>
+                    {% else %}
+                        <form action="{% url 'checkout_page' user.id %}" method="post" class="p-3">
+                            {% csrf_token %}
+                            <div class="checkoutForm">
+                                <label for="name">Name</label>
+                                <input type="text" name="name" id="name" placeholder="Your Name" required>
+                            </div>
+                            <input type="text" hidden name="total_price" id="selectedButton">
+                            <input type="text" hidden name="total_order_price" id="selectedButton1" value="{{total_price}}">
+                            <input type="text" id="input2" hidden placeholder="Input Table Number" name="table_number">
+                            <input type="text" hidden name="tip_amount" id="tip_amount">
+                            <input type="text" hidden name="range" id="range" value="In">
+                         
+                            <div class="checkoutForm">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" placeholder="name@gmail.com" required>
+                            </div>
+                            <div class="checkoutForm">
+                                <label for="number">Phone Number</label>
+                                <input type="number" name="phone" id="number" required>
+                            </div>
+                            {% if mob_user.order_type == 'dine_in' %}
+                            {% if user.table_number_status == 1 %}
+                            <div class="checkoutForm">
+                                <label for="number">Table Number</label>
+                                <input type="number" name="table_number" required>
+                            </div>
+                            {% endif %}
+                            {% endif %}
+                            {% if account.is_active == False %}
+                            <input type="text" hidden  name="stipe_type" value="off">
+                            <div class="checkoutForm">
+                                <label for="number">Payment Method</label>
+                                <select class="form-select" aria-label="Default select example" name="payment_type">
+                                    <option selected style="display:none;">Open this select menu</option>
+                                    <option value="" disabled>Pay with Cards, Bank Transfer or USSD(Unavailable)</option>
+                                    <option value="2">Pay with Cash</option>
+                                </select>
+                            </div>
+                            <div class="text-center mt-3">
+                                <button  type="submit" class="cartcheckout" >Submit order</button>
+                            </div>
+                            {% else %}
+                            <div class="checkoutForm">
+                                <label for="number">Payment Method</label>
+                                <select class="form-select" aria-label="Default select example" name="payment_type">
+                                    <option selected style="display:none;">Open this select menu</option>
+                                    {% if verify == True %}
+                                    <option value="online">Pay with Cards, Bank Transfer or USSD</option>
+                                    <option value="2">Pay with Cash</option>
+                                    {% else %}
+                                    <option value="" disabled>Pay with Cards, Bank Transfer or USSD(Unavailable)</option>
+                                    <option value="2">Pay with Cash</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="text-center mt-3">
+                                <button  type="submit" class="cartcheckout">Submit order</button>
+                            </div>
+                            {% endif %}
+                        </form>
+                    {% endif %}
+                    {% else %}
+                    <form method="post" class="p-3" action="{% url 'checkout_page' user.id %}">
+                        {% csrf_token %}
+                        <div class="checkoutForm">
+                            <label for="name">Name</label>
+                            <input type="text" name="name" id="name" required>
+                        </div>
+                        <input type="text" hidden name="total_price" id="selectedButton">
+                        <input type="text" hidden name="total_order_price" id="selectedButton1" value="{{total_price}}">
+                        <input type="text" hidden name="tip_amount" id="tip_amount">
+                        <div class="checkoutForm">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                            {% if distance > 100 %}
+                            <input type="text" hidden name="range" id="range" value="Out">
+                            {% else %}
+                            <input type="text" hidden name="range" id="range" value="In">
+                            {% endif %}
+                        </div>
+                        <div class="checkoutForm">
+                            <label for="number">Phone Number</label>
+                            <input type="number" name="phone" id="number" required>
+                        </div>
+                        <!-- {% if mob_user.order_type == 'dine_in' %}
+                        {% if user.table_number_status == 1 %}
+                        <div class="checkoutForm">
+                            <label for="number">Table Number</label>
+                            <input type="number" name="table_number" required>
+                        </div>
+                        {% endif %}
+                        {% endif %} -->
+                        {% if account.is_active == False %}
+                            <input type="text" hidden  name="stipe_type" value="off">
+                            <div class="checkoutForm">
+                                <label for="number">Payment Method</label>
+                                <select class="form-select" aria-label="Default select example" name="payment_type">
+                                    <option selected style="display:none;">Open this select menu</option>
+                                    <option value="" disabled>Pay with Cards, Bank Transfer or USSD(Unavailable)</option>
+                                    <option value="2">Pay with Cash</option>
+                                </select>
+                            </div>
+                            <div class="text-center mt-3">
+                                <button  type="submit" class="cartcheckout" >Submit order</button>
+                            </div>
+                        {% else %}
+                            {% if verify == False %}
+                            <input type="text" hidden  name="stipe_type" value="off">
+                            {% endif %}
+                            <div class="checkoutForm">
+                                <label for="number">Payment Method</label>
+                                <select class="form-select" aria-label="Default select example" name="payment_type">
+                                    <option selected style="display:none;">Open this select menu</option>
+                                    {% if verify == True %}
+                                    <option value="online">Pay with Cards, Bank Transfer or USSD</option>
+                                    <option value="" disabled>Pay with Cash(Unavailable)</option>
+                                    {% else %}
+                                    <option value="" disabled>Pay with Cards, Bank Transfer or USSD(Unavailable)</option>
+                                    <option value="2">Pay with Cash</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="text-center mt-3">
+                                <button  type="submit" class="cartcheckout">Submit order</button>
+                            </div>
+                        {% endif %}
+                    </form>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    {% else %}
+    <section>
+        <div class="addYourMeal">
+            <div class="bagempty">
+                <div>
+                    <img src="{% static 'images/bag.png' %}" height="200" alt="">
+                    <div class="addmealbtn">
+                        <a href="{% url 'mobile_home' user.id %}">Add meal to bag</a>
+                    </div>
+                </div>
+            </div>
+            <div class=" my-5">
+                <div class="text-center">
+                    <p class="mb-0">You haven't started an <br>order yet</p>
+                    <p class="mb-0">...</p>
+                    <h6>TAP ADD MEAL TO BAG TO START YOUR ORDER</6>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    {% endif %}
+</main>
+
+
+
+
+<script>
+    function increaseCount(a, b) {
+        var input = b.previousElementSibling;
+        var value = parseInt(input.value, 10);
+        value = isNaN(value) ? 0 : value;
+        value++;
+        if (value < 11) {
+            input.value = value;
+        }
+        if (value < 11) {
+            $.ajax({
+                type: "GET",
+                url: "/Manage-quantity/",
+                data: {
+                    id: a,
+                    quantity: value,
+                },
+                success: function (data) {
+                    location.reload()
+                }
+
+            });
+        }
+    }
+
+    function decreaseCount(a, b) {
+        var input = b.nextElementSibling;
+        var value = parseInt(input.value, 10);
+        if (value > 1) {
+            value = isNaN(value) ? 0 : value;
+            value--;
+            input.value = value;
+        }
+        $.ajax({
+            type: "GET",
+            url: "/Manage-quantity/",
+            data: {
+                id: a,
+                quantity: value,
+            },
+            success: function (data) {
+                location.reload()
+            }
+        });
+    }
+
+</script>
+<script>
+    function inputButton() {
+        const tips = document.getElementById('tips');
+        const inputButton = document.getElementById('inputButton');
+        const submitButton = document.getElementById('submitButton');
+        const resetButton = document.getElementById('resetButton');
+        const tip_value = document.getElementById('tip_value');
+        var numericValue = parseFloat(inputButton.value.replace('{{user.currency|default:"$"}}', ''));
+        tips.innerHTML = '{{user.currency|default:"$"}}' + ' ' + numericValue.toFixed(2);
+        tip_value.value = inputButton.value
+        inputButton.className = ' pricebtn2';
+        submitButton.className = ' pricebtn1';
+        resetButton.className = ' pricebtn1';
+        const sumtotal = document.getElementById('sumtotal');
+        var total = Number(numericValue) + Number("{{ service_add_money|floatformat:2 }}")
+        var total1 = Number(numericValue) + Number("{{ total_price|floatformat:2 }}")
+        alert(total1)
+        sumtotal.innerHTML = '{{user.currency|default:"$"}}' + ' ' + total.toFixed(2)
+        document.getElementById('selectedButton').value = total.toFixed(2)
+        document.getElementById('selectedButton1').value = total1.toFixed(2)
+        document.getElementById('tip_amount').value = numericValue
+    }
+    function submitButton() {
+        const inputButton = document.getElementById('inputButton');
+        const submitButton = document.getElementById('submitButton');
+        const resetButton = document.getElementById('resetButton');
+        const tip_value = document.getElementById('tip_value');
+        const tips = document.getElementById('tips');
+        var numericValue = parseFloat(submitButton.value.replace('{{user.currency|default:"$"}}', ''));
+        tip_value.value = submitButton.value
+        tips.innerHTML = '{{user.currency|default:"$"}}' + ' ' + numericValue.toFixed(2);
+        submitButton.className = ' pricebtn2';
+        inputButton.className = ' pricebtn1';
+        resetButton.className = ' pricebtn1';
+        const sumtotal = document.getElementById('sumtotal');
+        var total = Number(numericValue) + Number("{{ service_add_money|floatformat:2 }}")
+        var total1 = Number(numericValue) + Number("{{ total_price|floatformat:2 }}")
+        sumtotal.innerHTML = '{{user.currency|default:"$"}}' + ' ' + total.toFixed(2)
+        document.getElementById('selectedButton').value = total.toFixed(2)
+        document.getElementById('selectedButton1').value = total1.toFixed(2)
+        document.getElementById('tip_amount').value = numericValue
+
+    }
+    function resetButton() {
+        const inputButton = document.getElementById('inputButton');
+        const submitButton = document.getElementById('submitButton');
+        const resetButton = document.getElementById('resetButton');
+        const tip_value = document.getElementById('tip_value');
+        const tips = document.getElementById('tips');
+        var numericValue = parseFloat(resetButton.value.replace('{{user.currency|default:"$"}}', ''));
+        tip_value.value = resetButton.value
+        tips.innerHTML = '{{user.currency|default:"$"}}' + ' ' + numericValue.toFixed(2);
+        resetButton.className = ' pricebtn2';
+        submitButton.className = ' pricebtn1';
+        inputButton.className = ' pricebtn1';
+        const sumtotal = document.getElementById('sumtotal');
+        var total = Number(numericValue) + Number("{{ service_add_money|floatformat:2 }}")
+        var total1 = Number(numericValue) + Number("{{ total_price|floatformat:2 }}")
+        sumtotal.innerHTML = '{{user.currency|default:"$"}}' + ' ' + total.toFixed(2)
+        document.getElementById('selectedButton').value = total.toFixed(2)
+        document.getElementById('selectedButton1').value = total1.toFixed(2)
+        document.getElementById('tip_amount').value = numericValue
+    }
+    function custom_p() {
+        const tips = document.getElementById('tips');
+        const custom_price = document.getElementById('custom_price');
+        const tip_value = document.getElementById('tip_value');
+        var tip_price = custom_price.value
+        tip_value.value = custom_price.value
+        tips.innerHTML = '{{user.currency|default:"$"}}' + ' ' + tip_price+'.00';
+        const sumtotal = document.getElementById('sumtotal');
+        var total = Number(tip_value.value) + Number("{{ service_add_money|floatformat:2 }}")
+        var total1 = Number(numericValue) + Number("{{ total_price|floatformat:2 }}")
+        sumtotal.innerHTML = '{{user.currency|default:"$"}}' + ' ' + total.toFixed(2)
+        document.getElementById('selectedButton').value = total.toFixed(2);
+        document.getElementById('selectedButton1').value = total1.toFixed(2)
+        document.getElementById('tip_amount').value = tip_value.value
+        var inputButton = document.getElementById('inputButton')
+        const submitButton = document.getElementById('submitButton')
+        const resetButton = document.getElementById('resetButton')
+        resetButton.className = ' pricebtn1';
+        submitButton.className = ' pricebtn1';
+        inputButton.className = ' pricebtn1';
+    }
+
+    function cross() {
+        document.getElementById("custom_price").value = " ";
+
+    }
+
+</script>
+<script>
+    const tip_value = document.getElementById('tip_value');
+    const sumtotal = document.getElementById('sumtotal');
+    var total = Number(tip_value.value) + Number("{{ service_add_money }}")
+    sumtotal.innerHTML = '{{user.currency|default:"$"}}' + ' ' + total.toFixed(2)
+    document.getElementById('selectedButton').value = total.toFixed(2)
+</script>
+<script>
+    // Get references to the input fields
+    var input1 = document.getElementById('input1');
+    var input2 = document.getElementById('input2');
+
+    // Add an event listener to input1 to detect changes
+    input1.addEventListener('input', function () {
+        // Update the value of input2 with the value of input1
+        input2.value = input1.value;
+    });
+</script>
+<script>
+    function chnage_order_type(order_type){
+        var id='{{user.id}}'
+        $.ajax({
+            type: "POST",
+            url: "/Change-Order-Type/"+id,
+            data: {
+                order_type: order_type,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                window.location.reload();
+                
+            }
+        });
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+{% load static %}
+<html dir="ltr" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>FoodMenu.Home</title>
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'admin/images/favicon.png' %}">
+  <link href="{% static 'admin/plugins/bower_components/chartist/dist/chartist.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet"
+    href="{% static 'admin/plugins/bower_components/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.css' %}">
+  <!-- Custom CSS -->
+  <link href="{% static 'admin/css/style.min.css' %}" rel="stylesheet">
+  <link href="{% static 'admin/css/fontawesome.min.css' %}" rel="stylesheet">
+  <link href="{% static 'admin/css/responsive.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <style>
+    
+  </style>
+
+</head>
+
+<body>
+
+
+
+  <section class="align-items-center d-flex h-100">
+    <div class="container vh-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col col-xl-8">
+          <div class="card" style="border-radius: 1rem; overflow: hidden;">
+            <div class="row g-0">
+              <div class="col-md-5 col-lg-5 d-none d-md-block px-0">
+                <img src="{% static 'images/bgfood4.jpg' %}" alt="login form" class="img-fluid"
+                  style="border-radius: 1rem 0 0 1rem; height: 100%;" />
+              </div>
+              <div class="col-md-7 col-lg-7 d-flex align-items-center px-0">
+                <div class="card-body p-4  p-lg-5 text-black ">
+                  <div class="d-flex align-items-center justify-content-center mb-5">
+                    <img height="90" src="{% static 'images\food-logo.png' %}" alt="">
+                  </div>
+
+                  <div class="justify-content-center d-flex">
+                    <a href="{% url 'user-login' %}" class="btn btn-lg btn-info rounded-pill">Login</a>
+                    &nbsp;
+                    &nbsp;
+                    <a href="{% url 'user-registration' %}" class="btn btn-lg  btn-success rounded-pill">Create an
+                      Account</a>
+                  </div>
+
+                  {% if messages %}
+                  {% for message in messages %}
+                  {% if message.tags %}
+                  <script>swal("FoodMenu!", "{{message}}", "{{message.tags}}");</script>
+                  {% endif %}
+                  {% endfor %}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="{% static 'admin/plugins/bower_components/jquery/dist/jquery.min.js' %}"></script>
+  <!-- Bootstrap tether Core JavaScript -->
+  <script src="{% static 'admin/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'admin/js/app-style-switcher.js' %}"></script>
+  <script src="{% static 'admin/plugins/bower_components/jquery-sparkline/jquery.sparkline.min.js' %}"></script>
+  <!--Wave Effects -->
+  <script src="{% static 'admin/js/waves.js' %}"></script>
+  <!--Menu sidebar -->
+  <script src="{% static 'admin/js/sidebarmenu.js' %}"></script>
+  <!--Custom JavaScript -->
+  <script src="{% static 'admin/js/custom.js' %}"></script>
+  <!--This page JavaScript -->
+  <!--chartis chart-->
+  <script src="{% static 'admin/plugins/bower_components/chartist/dist/chartist.min.js' %}"></script>
+  <script
+    src="{% static 'admin/plugins/bower_components/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js' %}"></script>
+  <script src="{% static 'admin/js/pages/dashboards/dashboard1.js' %}"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+  <script src="{% static 'admin/js/char/t.js' %}"></script>
+  <script src="{% static 'admin/js/pie-chart.js' %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DineQR Menu</title>
+    <link rel="stylesheet" href="{% static 'admin/css/mob_view.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/FavIcon.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet'
+        href='https://cdn-uicons.flaticon.com/2.0.0/uicons-bold-straight/css/uicons-bold-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+</head>
+<style>
+    /* Add styles for the loading spinner */
+    /* CSS for the loading animation */
+    .searchbtn i {
+        position: absolute;
+        right: 15px;
+        top: 28px;
+        color: #909090;
+    }
+
+
+    .searchbtn input {
+        width: 100%;
+        border-radius: 21px;
+        padding: 10px;
+        margin: 30px 0 20px;
+        border: 1px solid #ccc;
+        background: #f8f8f8;
+    }
+    .loader-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .loader {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin: 0 5px;
+        background-color: #ededed;
+        /* Initial color */
+        animation: loading 2s infinite;
+    }
+
+    .loader:nth-child(2) {
+        animation-delay: 0.5s;
+    }
+
+    .loader:nth-child(3) {
+        animation-delay: 1s;
+    }
+
+    .loader:nth-child(4) {
+        animation-delay: 1.5s;
+    }
+
+    @keyframes loading {
+
+        0%,
+        100% {
+            background-color: #EC3724;
+            /* Initial color */
+        }
+
+        25% {
+            background-color: #f66658;
+            /* Color change 1 */
+        }
+
+        50% {
+            background-color: #f6a59b;
+            /* Color change 2 */
+        }
+
+        75% {
+            background-color: #f6e2e0;
+            /* Color change 3 */
+        }
+    }
+
+    .spinner img {
+        height: 40px;
+        width: 100px;
+    }
+
+    .searchbtn {
+        position: relative;
+    }
+
+    .searchbtn input {
+        width: 100%;
+        border-radius: 21px;
+        padding: 10px;
+        margin: 30px 0 20px;
+        border: 1px solid #ccc;
+        background: #f8f8f8;
+    }
+
+ 
+    .select2 {
+        width: 100% !important;
+        margin: 20px 0;
+    }
+
+    .select2-selection__arrow {
+        display: none;
+    }
+
+    .select2-container--default .select2-selection--single {
+        border-radius: 20px !important;
+    }
+
+    .select2-container .select2-selection--single {
+        height: 33px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 31px !important;
+    }
+
+    .select2-container .select2-selection--single .select2-selection__rendered {
+        padding-left: 13px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__clear {
+        left: -22px !important;
+    }
+
+
+
+</style>
+
+<body>
+
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner">
+            <!-- Add your loading animation or spinner here -->
+
+            <div>
+                <!-- <img src="{% static 'images/Frame 2546.png' %}" alt="Loading..." width="50" height="10"> -->
+
+                <div class="loader-container">
+                    <div>
+                        <div>
+                            <img src="{% static 'images/DineQR-Logo2.png' %}" alt="Loading...">
+                        </div>
+                        <div class="mx-2">
+                            <div class="loader"></div>
+                            <div class="loader"></div>
+                            <div class="loader"></div>
+                            <div class="loader"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Example: -->
+        </div>
+    </div>
+    <div id="mainpage" style="display: none;">
+        {% if order_type == False and restaurnt_type.restaurant_type == 'Restaurant' %}
+        <section class="continuetodine">
+            <div class="container-fluid">
+                <form method="post" >
+                    {% csrf_token %}
+                    <div class="DineContinue">
+                    
+                        <div>
+                            <div class="mb-5">
+                                <h5>Where would you love to dine?</h5>
+                                <p class="dineoptn">Let us know where you would love to enjoy your meal with
+                                    friends, family or by yourself whichever way we got you covered</p>
+                            </div>
+                            <div>
+                                <label for="dibeIn1" onclick="return selecttype(event,'dibeIn1')">
+                                    <input type="radio" id="dibeIn1" name="order_type" value="dine_in">
+                                    <div class="d-flex Dine-In" id="dineIn">
+                                        <div class="d-flex justify-content-center align-items-center mx-3">
+                                            <img src="{% static 'images\Vector12.png' %}" alt="" height="50">
+                                        </div>
+                                        <div class="pe-3">
+                                            <h5 class="pt-3">Dine-In</h5>
+                                            <p>Dine In - Savor the moment at your favorite restaurants. Reserve your
+                                                table, explore
+                                                delicious menus, and enjoy the perfect dining experience.</p>
+                                        </div>
+                                    </div>
+                                </label>
+                                <input type="text" name="user_id" value="{{customer.unique_id}}" hidden>
+                                <label for="dibeIn2" onclick="return selecttype(event,'dibeIn2')">
+                                    <input type="radio" id="dibeIn2" name="order_type" value="dine_takeaway">
+                                    <div class="d-flex Dine-In" id="dineToGo">
+                                        <div class="d-flex justify-content-center align-items-center mx-3">
+                                            <img src="{% static 'images\home.png' %}" alt="" height="50">
+                                        </div>
+                                        <div class="pe-3">
+                                            <h5 class="pt-3">Dine Takeaway</h5>
+                                            <p>Order your meal at the restaurant, but take it with you to enjoy wherever
+                                                you like,
+                                                whether
+                                                it's at home, the office, or your favorite spot. It's the flexibility to
+                                                dine on your terms.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="continuebutton">
+                        <button type="submit" disabled id="sub_button" class="continuebutton_button1" >Continue</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+        {% else %}
+        <header>
+            <section class="stickynav">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="bg-banner">
+                            {% if user.banner_image %}
+                            <img src="{{user.banner_image.url}}">
+                            {% else %}
+                            <img src="{% static 'images/blank.jpeg' %}" alt="">
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+                <div class="container-fluid" style="background-color: #f6f0ec;">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="profileimg">
+                                {% if user.restaurant_logo %}
+                                <img src="{{user.restaurant_logo.url}}" alt="">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-9">
+                            <div class="profileL">
+                                <h4 class="mb-2">{{user.restaurant_name}}</h4>
+                                <p><i class="fi fi-sr-marker"></i> {{user.restaurant_address}}, {{user.city}}
+                                    &nbsp;&nbsp;
+                                    <i class="fi fi-sr-clock-five"></i> Open untill {{formatted_time2}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </header>
+        <main>
+            <section class="mainmob">
+                <div id="image_sticky_scroll">
+                    <div>
+                        <!-- {% if top1.top_choice and top1.foodname.status == 'Publish' %}
+                        <div class="bgTop" style="background-image: url({{top1.foodname.food_image.url}});">
+                            <div class="pt-3">
+                                <a class="choicenumber"
+                                    href="{% url 'mob_Item_details' top1.foodname.id %}">{{top1.top_choice}}</a>
+                            </div>
+                            <div class="Stick">
+
+                                <div class="Chips">
+                                    <a href="{% url 'mob_Item_details' top1.foodname.id %}">
+                                    <div>
+                                        <p class="mb-0">{{top1.foodname.food_name}}</p>
+                                        <p class="mb-0"><small>{{qrimagecode.currency|default:'$'}} {{top1.foodname.price|floatformat:2}}</small></p>
+                                    </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                        {% endif %} -->
+                        <div class="container-fluid">
+                            <nav class="searchbtn">
+                                <form class="d-flex" action="{% url 'search_meal' %}" method="post">
+                                    {% csrf_token %}
+                                    <!-- <input id="search12" type="search" placeholder="Search meals, drinks..."
+                                        onfocus="this.placeholder=''"
+                                        onblur="this.placeholder='Search meals, drinks...'" aria-label="Search"> -->
+                                        <select name="search" id="search12"  class="form-control select2">
+                                            <option value=""></option>
+                                            {% for food_list in food_list %}
+                                            <option  value="{{food_list.id}}" >{{food_list.food_name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    <button type="submit"><i class="fi fi-br-search"></i></button>
+                                </form>
+                            </nav>
+                        </div>
+                        {% for data in data %}
+                        <div style="border-bottom: 1px solid #cccccc;">
+                            <a href="{% url 'mobile_items' data.id %}">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        {% if data.category_image %}
+                                        <div class="breakfastitem">
+                                            <img src="{{data.category_image.url}}">
+                                        </div>
+                                        {% else %}
+                                        <div class="breakfastitem12">
+                                            <img src="{%  static 'images/DineQR-Logo2.png' %}">
+                                        </div>
+                                        {% endif %}
+                                        <div class="breakfastitem">
+                                            <h6>{{data.category_name}}</h6>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="breakfastitem arrowIcon">
+                                            <img src="{%  static 'images\Arrow.png' %}" alt="Arrow Icon">
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- <section class="topchoice-item">
+                    <div class="container-fluid" style="padding: 37px 29px 38px">
+                        <div class="row">
+                            {% if top2.top_choice %}
+                            {% if top2.foodname.status == 'Publish' %}
+                            <div class="col-6">
+                                <div class="bgTop2" style="background-image: url({{top2.foodname.food_image.url}});">
+                                    <div class="choices pt-3">
+                                        <a href="{% url 'mob_Item_details' top2.foodname.id %}">{{top2.top_choice}}</a>
+                                    </div>
+                                    <div class="Stick1">
+                                        <a href="{% url 'mob_Item_details' top2.foodname.id %}">
+                                            <div class="Chips1">
+                                                <p class="mb-0">{{top2.foodname.food_name}}</p>
+                                                <p class="mb-0"><small>{{qrimagecode.currency|default:'$'}}
+                                                        {{top2.foodname.price|floatformat:2}}</small>
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endif %}
+                            {% if top3.top_choice and top3.foodname.status == 'Publish' %}
+                            <div class="col-6">
+                                <div class="bgTop2" style="background-image: url({{top3.foodname.food_image.url}});">
+                                    <div>
+                                        <div class="choices1 pt-3">
+                                            <a
+                                                href="{% url 'mob_Item_details' top3.foodname.id %}">{{top3.top_choice}}</a>
+                                        </div>
+                                        <div class="Stick1">
+                                            <a href="{% url 'mob_Item_details' top3.foodname.id %}">
+                                                <div class="Chips1">
+                                                    <p class="mb-0">{{top3.foodname.food_name}}</p>
+                                                    <p class="mb-0">
+                                                        <small>{{qrimagecode.currency|default:'$'}}
+                                                            {{top3.foodname.price|floatformat:2}}</small>
+                                                    </p>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </section>
+            </section> -->
+                {% if messages %}
+                {% for message in messages %}
+                <section>
+                    <div id="windowPop" class="modal fade" role="dialog" data-bs-backdrop="static"
+                        data-bs-keyboard="false">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content text-center cart-add" style=" background-color: #fff;">
+                                <div class="addedto">
+                                    <div>
+                                        <img src="{% static 'images/addtocart.png' %}" alt="">
+                                        <p class="mb-0 mt-3">Added to order ({{addtocart}})</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                {% endfor %}
+                {% endif %}
+        </main>
+        <footer>
+            <section>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="shop">
+                                <div>
+                                    <img height="40" src="{% static 'images/DineQR-Logo2.png' %}">
+
+                                </div>
+                                <a href="{% url 'AddToCartView' user.id %}">
+                                    <div>
+                                        <img src="{% static 'images/shop.png' %}" alt="">
+                                        {% if addtocart == 0 %}
+                                        <span class="badge1">
+                                            <p>{{addtocart}}</p>
+                                        </span>
+                                        {% else %}
+                                        <span class="badge2">
+                                            <p>{{addtocart}}</p>
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </footer>
+        
+
+        {% endif %}
+    </div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDI6643MQ-SLs7dwH12SzHg2DsuDVf07I&libraries=places"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function bgchange(elementId) {
+            document.getElementById("dineIn").classList.remove("selected");
+            document.getElementById("dineToGo").classList.remove("selected");
+            document.getElementById(elementId).classList.add("selected");
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#windowPop').modal('show');
+        });
+        $('.close').click(function () {
+
+            $("#windowPop").modal('toggle');
+        })
+
+    </script>
+    <script>
+        $(function () {
+            var header = $(".stickynav");
+            var image_scroll = $("#image_sticky_scroll")
+            $(window).scroll(function () {
+                var scroll = $(window).scrollTop();
+                if (scroll >= 50) {
+                    header.addClass("scrolled");
+                    image_scroll.addClass("mainmob22")
+                } else {
+                    header.removeClass("scrolled");
+                    image_scroll.removeClass("mainmob22")
+                }
+            });
+
+        });
+    </script>
+    <script>
+        document.getElementById("loadingSpinner").style.display = "block";
+        setTimeout(function () {
+            document.getElementById("loadingSpinner").style.display = "none";
+            document.getElementById('mainpage').style.display = "block";
+        }, 2000);
+    </script>
+    <script>
+        // Automatically close the Bootstrap modal after 2 seconds (2000 milliseconds)
+        setTimeout(function () {
+            $('#windowPop').modal('hide');
+        }, 4000);
+    </script>
+    <script>
+        function selecttype(event, typpe) {
+            event.stopPropagation();
+            var a = document.getElementById(typpe)
+            var button = document.getElementById('sub_button')
+            if (a == dibeIn1) {
+                document.getElementById('dineIn').classList.replace('Dine-In', 'Dine-In-selected')
+                a.checked = true
+                document.getElementById('dineToGo').classList.replace('Dine-In-selected', 'Dine-In')
+                button.classList.replace('continuebutton_button1', 'continuebutton_button');
+                button.disabled = false;
+                return false;
+            }
+            else {
+                document.getElementById('dineToGo').classList.replace('Dine-In', 'Dine-In-selected')
+                a.checked = true
+                document.getElementById('dineIn').classList.replace('Dine-In-selected', 'Dine-In')
+                button.classList.replace('continuebutton_button1', 'continuebutton_button');
+                button.disabled = false;
+                return false;
+            }
+
+
+        }
+    </script>
+<script>
+    restaurnt_type= '{{restaurnt_type.restaurant_type}}'
+    unique_id = '{{id}}';
+    user_id='{{user.id}}'
+    if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+        function (position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+
+            $.ajax({
+            type: "POST",
+            url: "/user-location/",
+            data: {
+                latitude: lat,
+                longitude: lng,
+                unique_id:unique_id,
+                user_id:user_id,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (context) {
+            }
+        });
+        },
+        function (error) {
+            alert(`Error getting location: To use this feature, please enable location services.`)
+            location.reload()
+        }
+    );
+} else {
+    alert("Geolocation is not supported by this browser.")
+    location.reload()
+}
+    
+</script>
+<script>
+   $(".select2").select2({
+        placeholder: "Search meals, drinks...",
+        allowClear: true
+});
+</script>
+</body>
+</html>

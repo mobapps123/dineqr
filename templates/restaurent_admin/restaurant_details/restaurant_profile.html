@@ -1,0 +1,827 @@
+{% extends 'restaurent_admin/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<style>
+    .pass {
+        position: absolute;
+        top: 39px;
+        left: 400px;
+    }
+    .active{
+        color:#ec3724;
+    }
+
+    .changep {
+        position: relative;
+    }
+
+    .changep input {
+        width: 50%;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked+.slider {
+        background-color: #00c1be;
+    }
+
+    input:focus+.slider {
+        box-shadow: 0 0 1px #00c1be;;
+    }
+
+    input:checked+.slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+
+    }
+    .profileimg span {
+    display: inline-block;
+    position: absolute;
+    left: 41px;
+    bottom: 0px;
+    opacity: 0;
+    cursor: pointer;
+    font-size: 10px; text-align: center;
+}
+
+    .profileimg span:hover {
+        background-color: rgba(0, 0, 0, .5);
+    z-index: 10000;
+    color: #fff;
+    text-decoration: none;
+    height: 85px;
+    width: 85px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0px;
+    left: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+}
+
+</style>
+<section>
+    <div>
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.tags %}
+        <script>swal("{{message}}", " ", "{{message.tags}}");</script>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+    </div>
+
+
+    <section>
+        <div class="page-wrapper main-page mt-3">
+            <div class="page-breadcrumb container-fluid responsive_container">
+                <div>
+                    <h4>Settings</h4>
+                    <p>Customise your experience to your taste</p>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 ">
+                        <div class="vertical-tabs">
+                            <a class="tab borderbottom" >
+                                <button class="tablinks active" id="tabFirst" onclick="openTab(event, 'tab1')"> 
+                                    <img class="tabitem1" src="{% static 'images\user-square(1).png' %}" id="tabfirstimage" >
+                                    <img class="tabitem" src="{% static 'images\user-square(1).png' %}">
+                                    &nbsp;Account</button>
+                            </a>
+                            <a class="tab borderbottom" >
+                                <button class="tablinks " id="tabsix" onclick="openTab(event, 'tab6')"> 
+                                    <img class="tabitem1" src="{% static 'images\user-square.png' %}" id="tabsiximage" >
+                                    <img class="tabitem" src="{% static 'images\user-square(1).png' %}">
+                                    &nbsp;Bank Account details</button>
+                            </a>
+                            <a class="tab borderbottom"  >
+                                <button class="tablinks" id="tabsecond" onclick="openTab(event, 'tab2')" >
+                                    <img height="25" class="tabitem1" src="{% static 'images/lock.png' %}" id="tabsecondimage">
+                                    <img height="25" class="tabitem" src="{% static 'images/lock(1).png' %}" >
+                                    &nbsp;Change Password</button>
+                                </a>
+                            <a class="tab borderbottom"   >
+                                <button class="tablinks" id="tabsecond" onclick="openTab(event, 'tab3')">
+                                    <img class="tabitem1" src="{% static 'images\notification(1).png' %}" id="tabthirdimage">
+                                    <img class="tabitem" src="{% static 'images\notification.png' %}" >
+                                    &nbsp;Notification</button>
+                                </a>
+                            <div class="tab borderbottom"  >
+                                <button class="tablinks" id="tabsecond" onclick="openTab(event, 'tab4')">
+                                    <img class="tabitem1" src="{% static 'images/healthicons_money-bag-outline.png' %}" id="tabforthimage" >
+                                    <img class="tabitem" src="{% static 'images/healthicons_money-bag-outline(1).png' %}" >
+                                        &nbsp;Payment</button>
+                            </div>
+                            <!-- <a class="tab">
+                                <button class="tablinks" id="tabsecond" onclick="openTab(event, 'tab5')">
+                                    <img class="tabitem1" src="{% static 'images\receipt-item.png' %}" id="tabfifthimage">
+                                    <img class="tabitem"src="{% static 'images\receipt-item(1).png' %}" >
+                                    &nbsp;Subscription</button>
+                                </a> -->
+                        </div>
+                    </div>
+
+                    <div class="col-lg-9">
+                        <div class="accountbody">
+                            <div class="tabcontent " id="tab1" style="display: block;">
+                                <form method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="bannerimg text-center" {% if request.user.banner_image %} style="background-image: url({{request.user.banner_image.url}}); 
+                                        background-repeat: no-repeat; background-size: cover;" {% endif %}>
+                                        <label for="banner" class="text-light">
+                                            <div class="pt-3">
+                                                <p>Add banner Image</p>
+                                                <b>Banner dimensions 430px 200px</b>
+                                            </div>
+                                            <div class="removebtn mt-3">
+                                                <label><input type="file" name="banner_image" />Upload</label>
+                                                <button type="button" onclick="return bannerimageremove('{{request.user.id}}')">Remove</button>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="profileimg">
+                                        <label for="profile">
+                                            <input type="file" id="profile" name="restaurant_logo">
+                                            {% if request.user.restaurant_logo %}
+                                            <img src="{{request.user.restaurant_logo.url}}" height="50">
+                                            {% else %}
+                                            <img src="{% static 'images/default.png' %}">
+                                            {% endif %}
+                                            <span>Click to Change Profile</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="row d-flex justify-content-between p-lg-5 p-md-5 p-sm-3">
+                                        <div class="col-lg-7">
+                                            <div class="form-group">
+                                                <label for="rest">Restaurent Name</label>
+                                                <input id="rest" placeholder="Chicken Republic" type="text"
+                                                    name="restaurant_name" value="{{request.user.restaurant_name|default:''}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <div class="form-group">
+                                                <label for="number">Phone Number</label>
+                                                <input id="number" placeholder="(555) 123-4567" type="text"
+                                                    name="phone_number" value="{{request.user.phone_number|default:''}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group">
+                                                <label for="email">Email</label>
+                                                <input id="email" mailto:placeholder="info@chickenrepublic.com"
+                                                    type="text" name="email" value="{{request.user.email_id|default:''}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <div class="form-group">
+                                                <label for="country">Country</label>
+                                                <select id="country" name="country">
+                                                    {% if request.user.country %}
+                                                    <option value="{{country_add.id}}" >{{country_add.name}}</option>
+                                                    {% else %}
+                                                    <option value="">Select Country</option>
+                                                    {% endif %}
+                                                    {% for country in country %}
+                                                        <option value="{{ country.id }}">{{ country.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label for="state">State</label>
+                                                <select id="state" name="state" >
+                                                    {% if request.user.state %}
+                                                    <option value="{{state.id}}" >{{state.name}}</option>
+                                                    {% else %}
+                                                    <option value="">Select State</option>  
+                                                    {% endif %}
+                                                    {% for all_state in all_state %}
+                                                        <option value="{{ all_state.id }}">{{ all_state.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label for="City">City</label>
+                                                <select id="city" name="city" >
+                                                    {% if request.user.city %}
+                                                    <option value="{{city.id}}" >{{city.name}}</option>
+                                                    {% else %}
+                                                    <option value="">Select City</option>
+                                                    {% endif %}
+                                                    {% for all_city in all_city %}
+                                                        <option value="{{ all_city.id }}">{{ all_city.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label for="City">Zip Code</label>
+                                                <input id="zip_code" placeholder="678990" type="text" name="code"
+                                                    value="{{request.user.Postal_code|default:''}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group">
+                                                <label for="Address">Address</label>
+                                                <input id="Address" placeholder="123 Main Street" type="text"
+                                                    name="restaurant_address"
+                                                    value="{{request.user.restaurant_address|default:''}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <div class="form-group">
+                                                <label for="hours">Hours of operations</label>
+                                                <div class="d-flex hours">
+                                                    <input id="hours" class="me-2" placeholder="AM (08:00)" type="time" name="open_time" value="{{request.user.open_time}}">
+                                                    <input id="hours" placeholder="PM (10:00)" type="time" name="close_time" value="{{request.user.close_time}}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <div class="form-group">
+                                                <label for="hours">Restuarant Type</label>
+                                                <select name="restaurant_type" id="restuarant_type">
+                                                    {% for type in model.type %}
+                                                    {% if typee.restaurant_type == type.0 %}
+                                                    <option value="{{type.0}}" selected>{{type.1}}</option>
+                                                    {% else %}
+                                                    <option value="{{type.0}}">{{type.1}}</option>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- <div class="col-lg-5">
+                                        <div class="form-group px-lg-5 px-md-5 px-sm-3">
+                                            <label for="Address">Payment</label>
+                                            {% if check == 'false' %}
+                                            <label class="switch">
+                                                <input type="checkbox" onclick="return enable_diable('{{rname.id}}')">
+                                                <span class="slider"></span>
+                                            </label>
+                                            {% else %}
+                                            <label class="switch">
+                                                <input type="checkbox" checked
+                                                    onclick="return enable_diable('{{rname.id}}')">
+                                                <span class="slider"></span>
+                                            </label>
+                                            {% endif %}
+                                        </div>
+                                    </div> -->
+                                    
+                                    <div>
+                                        <button type="submit" class="saveinfo">Save Information</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div id="tab6" class="tabcontent passwordP p-lg-5 p-md-4">
+                                <div class="borderbottom1">
+                                    <h4>Bank Details</h4>
+                                    <p><img src="{% static 'images\info.png' %}">&nbsp; Add your bank details here</p>
+                                </div>
+                                <form action="{% url 'account_detail' %}" method="post">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-lg-7">
+                                            <div class="form-group passwordeye">
+                                                <label for="oldPassword">Account Number</label>
+                                                <input type="text" class="form-control field change_border"
+                                                name="account_number" placeholder="Enter Text" autofocus="" required  value="{{account_details.account_number}}"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group passwordeye">
+                                                <label for="newPassword">Account Holder Name</label>
+                                                <input type="text" class="form-control field change_border"
+                                                name="account_holder_name" placeholder="Enter Text" autofocus="" required  value="{{account_details.account_holder_name}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group passwordeye">
+                                                <label for="confirm Password">Routing Number</label>
+                                                <input type="text" class="form-control field change_border"
+                                                name="routing_number" placeholder="Enter Text" autofocus="" required  value="{{account_details.routing_number}}"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group passwordeye">
+                                                <label for="confirm Password" >Account Holder Type</label>
+                                                <select name="account_holder_type" id="">
+                                                    {% if not  account_details.account_holder_type %}
+                                                        <option value="">Select Account type</option>
+                                                    {% endif %}
+                                                    {% for acc in accounts.type %}
+                                                    {% if  account_details.account_holder_type == acc.0 %}
+                                                    <option value="{{acc.0}}" selected>{{acc.1}}</option>
+                                                    {% else %}
+                                                    <option value="{{acc.0}}">{{acc.1}}</option>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="saveinfo2">
+                                                <button class="submit">Submit</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div id="tab2" class="tabcontent passwordP p-lg-5 p-md-4">
+                                <div class="borderbottom1">
+                                    <h4>Change Password</h4>
+                                    <p><img src="{% static 'images\info.png' %}">&nbsp; Change Your Password here</p>
+                                </div>
+                                <form action="{% url 'change-user-password' %}" method="post">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-lg-7">
+                                            <div class="form-group passwordeye">
+                                                <label for="oldPassword">Old Password</label>
+                                                <input type="password" class="form-control field change_border"
+                                                name="old_password" placeholder="Enter Text" autofocus="" required
+                                                id="id_password" />
+                                                <i class="eyeicon fa fa-eye" id="togglePassword"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group passwordeye">
+                                                <label for="newPassword">New Password</label>
+                                                <input type="password" class="form-control field change_border"
+                                                name="new_password" placeholder="Enter Text" autofocus="" required
+                                                oninput="return msg()" id="id_password1" onpaste="return false" oncopy="return false" />
+                                                <i class="eyeicon fa fa-eye" id="togglePassword1"></i>
+                                                <span id="valmessage" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group passwordeye">
+                                                <label for="confirm Password">Confirm Password</label>
+                                                <input type="password" class="form-control field change_border" oninput="return msg1()"
+                                                name="confirm_password" placeholder="Enter Text" autofocus="" required
+                                                id="id_password2" onpaste="return false " oncopy="return false" />
+                                                <i class="eyeicon fa fa-eye" id="togglePassword2"></i>
+                                            <span id="valmessage1" class=" text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="saveinfo2">
+                                                <button class="submit">Submit</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div id="tab3" class="tabcontent ">
+                                <div class="p-lg-5 p-md-4 p-sm-3">
+                                    <div class="borderbottom1">
+                                        <h4>Notifications</h4>
+                                        <p><img src="{% static 'images\info.png' %}">&nbsp; Personalise your
+                                            notification</p>
+                                    </div>
+                                    <div class="accountinner">
+                                        <div class="mb-4">
+                                            <h5>Website Notification</h5>
+                                            <p class="p-0">Fine-tune your notification preferences with our website's
+                                                settings.
+                                                Stay
+                                                connected,
+                                                efficiently.</p>
+                                        </div>
+                                        <div class="mb-4">
+                                            <h6><input type="checkbox">&nbsp;&nbsp;&nbsp;&nbsp; Updates & Activities
+                                                Settings
+                                            </h6>
+                                            <p>Only Notify me when we have the latest activity updates and increasing
+                                                and
+                                                decreasing
+                                                data.</p>
+                                        </div>
+                                        <div class="mb-4">
+                                            <h6>{% if request.user.table_number_status == 0 %}<input type="checkbox" onclick="return tablestatus()">{% else %} <input type="checkbox" checked onclick="return tablestatus()">{% endif %}&nbsp;&nbsp;&nbsp;&nbsp; Enter Table Number</h6>
+                                            <p>Selecting this option enables users to enter their table number before checkout.
+                                            </p>
+                                        </div>
+                                        <div class="borderbottom mb-3">
+                                            <h6><input type="checkbox">&nbsp;&nbsp;&nbsp;&nbsp; News Notification</h6>
+                                            <p>You will receive updates, announcements, promotions notification.</p>
+                                        </div>
+                                        <div class="mb-4">
+                                            <h5>E - Mail Notification</h5>
+                                            <p class="p-0">Personalize your E-mail notification settings to your suit
+                                                your
+                                                taste.</p>
+                                        </div>
+                                        <div class="mb-4">
+                                            <h6><input type="checkbox">&nbsp;&nbsp;&nbsp;&nbsp; Update Settings</h6>
+                                            <p>Get notified about the latest features and about future updates directly
+                                                to
+                                                your
+                                                email.</p>
+                                        </div>
+                                        <div class="mb-4">
+                                            <h6><input type="checkbox">&nbsp;&nbsp;&nbsp;&nbsp; Payment Plan</h6>
+                                            <p>Get notified on your payment receipt and plans </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tab4" class="tabcontent ">
+                                <div class="p-lg-5 p-md-4 p-sm-3">
+                                    <div class="borderbottom1">
+                                        <h4>Payment</h4>
+                                        <p><img src="{% static 'images\info.png' %}">&nbsp; Connect with stripe to begin
+                                            accepting payments.</p>
+                                    </div>
+                                    <div class="borderbottom1 paymenticon">
+                                        <img src="{% static 'images\stripe.png' %}">
+
+                                        {% if account.status == False %}
+                                        {% if account_details %}
+                                        <a href="{% url 'connect' %}" class="loginclr" target="_blank"><b>Connect with Stripe</b></a>
+                                        {% else %}
+                                        <h5>
+                                            Need to add Bank Details.
+                                        </h5>
+                                        {% endif %}
+                                        {% else %}
+                                        {% if verify == True %}
+                                        <div class="col-lg-5">
+                                            {% if account.is_active == False %}
+                                            <label class="switch">
+                                                <input type="checkbox" onclick="return account_enable_diable()">
+                                                <span class="slider"></span>
+                                            </label>
+                                            {% else %}
+                                            <label class="switch">
+                                                <input type="checkbox" checked
+                                                    onclick="return account_enable_diable()">
+                                                <span class="slider"></span>
+                                            </label>
+                                            {% endif %}
+                                        </div>
+                                        {% else %}
+                                        <a href="{% url 'edit_details_accounts' %}" class="text-danger"><b>Pending..</b></a>
+                                        {% endif %}
+                                        {% endif %}
+                                    </div>
+                                    <!-- <div class="borderbottom1 paymenticon">
+                                        <img src="{% static 'images\paypal.png' %}">
+                                        <a href="#" class="loginclr"><b>Connect with Paypal</b></a>
+
+                                    </div>
+                                    <div class="borderbottom1 paymenticon">
+                                        <img src="{% static 'images\paystack.png' %}">
+                                        <a href="#" class="loginclr"><b>Connect with Paystack</b></a>
+
+                                    </div> -->
+                                </div>
+                            </div>
+                            <!-- <div id="tab5" class="tabcontent ">
+                                <div class="p-lg-5 p-md-4 p-sm-3">
+                                    <div class="borderbottom1">
+                                        <h4>Subscription</h4>
+                                        <p><img src="{% static 'images\info.png' %}">&nbsp; Pick a payment
+                                            plan
+                                            that suits your needs</p>
+                                    </div>
+                                    <div class="subBox">
+                                        <div class="text-center">
+                                            <div class="d-flex align-items-end justify-content-center pricesize">
+                                                <h2>$49.99</h2>
+                                                <span class="mb-3">/monthly</span>
+                                            </div>
+                                            <div>
+                                                <b>Billed yearly</b>
+                                            </div>
+                                        </div>
+                                        <div class="middleline"></div>
+                                        <div class="startitem text-start d-lg-flex justify-content-center">
+                                            <div class="me-lg-5 ms-3">
+                                                <span><i class="fi fi-rr-check"></i> Expanded Menu</span>
+                                                <span><i class="fi fi-rr-check"></i> Priority QR Code
+                                                    Generation</span>
+                                                <span><i class="fi fi-rr-check"></i> Advanced Order Management</span>
+                                                <span><i class="fi fi-rr-check"></i> Comprehensive Analytics</span>
+                                            </div>
+                                            <div class="ms-3">
+                                                <span><i class="fi fi-rr-check"></i> Payment Integration</span>
+                                                <span><i class="fi fi-rr-check"></i> Custom Branding</span>
+                                                <span><i class="fi fi-rr-check"></i> Priority Customer Support</span>
+                                            </div>
+
+                                        </div>
+                                        <div class="d-flex justify-content-center align-items-end pt-3">
+                                            <button class="btnUpgrade">Unsubscribe</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    </div>
+
+</section>
+
+<script type="text/javascript">
+    function openTab(event, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent")
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        event.currentTarget.className += " active";
+        if (tabName=='tab1'){
+            document.getElementById('tabfirstimage').src = '{% static "images/user-square(1).png" %}'
+            document.getElementById('tabsiximage').src = '{% static "images/user-square.png" %}'
+            document.getElementById('tabsecondimage').src = '{% static "images/lock.png" %}'
+            document.getElementById('tabthirdimage').src = '{% static "images/notification(1).png" %}'
+            document.getElementById('tabforthimage').src = '{% static "images/healthicons_money-bag-outline.png" %}'
+            // document.getElementById('tabfifthimage').src = '{% static "images/receipt-item.png" %}'
+        }
+        if(tabName == 'tab2'){
+            document.getElementById('tabfirstimage').src = '{% static "images/user-square.png" %}'
+            document.getElementById('tabsiximage').src = '{% static "images/user-square.png" %}'
+            document.getElementById('tabsecondimage').src = '{% static "images/lock(1).png" %}'
+            document.getElementById('tabthirdimage').src = '{% static "images/notification(1).png" %}'
+            document.getElementById('tabforthimage').src = '{% static "images/healthicons_money-bag-outline.png" %}'
+            // document.getElementById('tabfifthimage').src = '{% static "images/receipt-item.png" %}'
+        }
+        if(tabName == 'tab3'){
+            document.getElementById('tabfirstimage').src = '{% static "images/user-square.png" %}'
+            document.getElementById('tabsiximage').src = '{% static "images/user-square.png" %}'
+            document.getElementById('tabsecondimage').src = '{% static "images/lock.png" %}'
+            document.getElementById('tabthirdimage').src = '{% static "images/notification.png" %}'
+            document.getElementById('tabforthimage').src = '{% static "images/healthicons_money-bag-outline.png" %}'
+            // document.getElementById('tabfifthimage').src = '{% static "images/receipt-item.png" %}'
+        }
+        if(tabName == 'tab4'){
+            document.getElementById('tabfirstimage').src = '{% static "images/user-square.png" %}'
+            document.getElementById('tabsiximage').src = '{% static "images/user-square.png" %}'
+            document.getElementById('tabsecondimage').src = '{% static "images/lock.png" %}'
+            document.getElementById('tabthirdimage').src = '{% static "images/notification(1).png" %}'
+            document.getElementById('tabforthimage').src = '{% static "images/healthicons_money-bag-outline(1).png" %}'
+            // document.getElementById('tabfifthimage').src = '{% static "images/receipt-item.png" %}'
+        }
+        // if(tabName == 'tab5'){
+        //     document.getElementById('tabfirstimage').src = '{% static "images/user-square.png" %}'
+        //     document.getElementById('tabsecondimage').src = '{% static "images/lock.png" %}'
+        //     document.getElementById('tabthirdimage').src = '{% static "images/notification(1).png" %}'
+        //     document.getElementById('tabforthimage').src = '{% static "images/healthicons_money-bag-outline.png" %}'
+        //     document.getElementById('tabfifthimage').src = '{% static "images/receipt-item(1).png" %}'
+        // }
+        if(tabName == 'tab6'){
+            document.getElementById('tabfirstimage').src = '{% static "images/user-square.png" %}'
+            document.getElementById('tabsiximage').src = '{% static "images/user-square(1).png" %}'
+            document.getElementById('tabsecondimage').src = '{% static "images/lock.png" %}'
+            document.getElementById('tabthirdimage').src = '{% static "images/notification(1).png" %}'
+            document.getElementById('tabforthimage').src = '{% static "images/healthicons_money-bag-outline.png" %}'
+            document.getElementById('tabfifthimage').src = '{% static "images/receipt-item(1).png" %}'
+        }
+    }
+
+
+    function mydel(id) {
+        $.ajax({
+            type: "POST",
+            url: "/Delete-Profile/",
+            data: {
+                id: id,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+
+            }
+        });
+    }
+</script>
+<script>
+    function myfun() {
+        var a = document.getElementById("id_password1").value;
+        var b = document.getElementById("id_password2").value;
+        var pass_way = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+        if (!a.match(pass_way)) {
+            return false
+        }
+        if (a != b) {
+            return false
+        }
+    }
+</script>
+
+<script>
+    function msg1() {
+        var a = document.getElementById("id_password1").value;
+        var b = document.getElementById("id_password2").value;
+        if (a != b) {
+            document.getElementById("valmessage1").innerHTML = "**Password did not match"
+        }
+        else {
+            document.getElementById("valmessage1").innerHTML = " ";
+        }
+    }
+</script>
+
+
+<script>
+    function msg() {
+        var a = document.getElementById("id_password1").value;
+        var pass_way = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+
+        if (!a.match(pass_way)) {
+            document.getElementById("valmessage").innerHTML = "**Password must contain at least eight characters one numebr and one alphabet and one special character"
+        }
+        else {
+            document.getElementById("valmessage").innerHTML = " ";
+        }
+    }
+
+
+</script>
+<script>
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#id_password');
+
+    togglePassword.addEventListener('click', function (e) {
+        // toggle the type attribute
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        // toggle the eye slash icon
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
+<script>
+    const togglePassword1 = document.querySelector('#togglePassword1');
+    const password1 = document.querySelector('#id_password1');
+
+    togglePassword1.addEventListener('click', function (e) {
+        // toggle the type attribute
+        const type = password1.getAttribute('type') === 'password' ? 'text' : 'password';
+        password1.setAttribute('type', type);
+        // toggle the eye slash icon
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
+<script>
+    const togglePassword2 = document.querySelector('#togglePassword2');
+    const password2 = document.querySelector('#id_password2');
+
+    togglePassword2.addEventListener('click', function (e) {
+        // toggle the type attribute
+        const type = password2.getAttribute('type') === 'password' ? 'text' : 'password';
+        password2.setAttribute('type', type);
+        // toggle the eye slash icon
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
+<script>
+    function account_enable_diable() {
+        $.ajax({
+            type: 'POST',
+            url: '/enable-disable/',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+            }
+        });
+    }
+    
+</script>
+
+<script>
+    function bannerimageremove(idd){
+        $.ajax({
+            type: 'POST',
+            url: '/remove-banner/',
+            data: {
+                idd: idd,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                location.reload()
+            }
+        }); 
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $('#country').change(function () {
+            var country_id = $(this).val();
+            $('#city').empty().append('<option value="">Select City</option>');
+            $.ajax({
+                url: '/get_states/',
+                type: 'GET',
+                data: { 'country_id': country_id },
+                success: function (data) {
+                    var states = data.states;
+                    $('#state').empty().append('<option value="">Select State</option>');
+                    $.each(states, function (i, state) {
+                        $('#state').append('<option value="' + state.id + '">' + state.name + '</option>');
+                    });
+                }
+            });
+        });
+
+        $('#state').change(function () {
+            var state_id = $(this).val();
+            $.ajax({
+                url: '/get_cities/',
+                type: 'GET',
+                data: { 'state_id': state_id },
+                success: function (data) {
+                    var cities = data.cities;
+                    $('#city').empty().append('<option value="">Select City</option>');
+                    $.each(cities, function (i, city) {
+                        $('#city').append('<option value="' + city.id + '">' + city.name + '</option>');
+                    });
+                }
+            });
+        });
+    });
+</script>
+<script>
+    function tablestatus(){
+        $.ajax({
+                url: '/table_status/',
+                type: 'GET',
+                
+                success: function (data) {
+                   
+                }
+            });
+    }
+</script>
+
+<script>
+    $('.select2').select2();
+</script>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<div class="page-wrapper wrapper_page" style="min-height: 250px;">
+  <!-- ============================================================== -->
+  <!-- Bread crumb and right sidebar toggle -->
+  <!-- ============================================================== -->
+  <div class="container-fluid fluid_container responsive_container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="application-detail-heading-area">
+          <h2 class="noti_detail">List of Food Items</h2>
+          <div>
+            {% for message in messages %}
+            <b style="color:#084615; margin-left: 22px;">{{message}}</b>
+            {% endfor %}
+          </div>
+        </div>
+        {% if data %}
+        <div class="contact-detail-main-area main_area_contact_detail">
+          <div class="row">
+            <div class="col-lg-12">
+              <!-- <div class="contact-heading-area">
+
+          </div> -->
+
+              <div class="terms-conditions-detail-area">
+                <div class="table-responsive">
+                  <table class="table table-hover table-bordered table-warning" id="notification"> 
+
+                    <thead>
+                      <tr>
+                          <th>S.N.</th>
+                          <th>Food Image</th>
+                          <th>Food Item</th>
+                          <th>Price</th>
+                          <th>Add-Ons</th>
+                          <th>Description</th>
+                          <th>Created AT</th>
+                          <th>Updated At</th>
+                          <th>Action</th>
+
+                      </tr>
+                  </thead>
+
+                  <tbody>
+                      {% for head in data %}
+                      <tr>
+                          <td>
+                              <a href=""> {{forloop.counter}}</a>
+                          </td>
+                          <td>
+                            {% if head.food_image %}
+                            <img src="{{head.food_image.url}}" style="height: .7in; width: 2.5cm;" alt="">
+                            {% else %}
+                            <h3>None</h3>
+                            {% endif %}
+                        </td>
+                          <td>{{head.food_name}}</td>       
+                          <td>${{head.price}}</td>
+                          <td>
+                            <div class="dropdown">
+                              <!-- <a class=" dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Click to Check
+                              </a>
+                              <ul class="dropdown-menu">
+                                {% for add in head.addon.all %}
+                                <li><a class="dropdown-item">{{add.all_addon.name}} -${{add.all_addon.price}}</a></li>
+                                {% endfor %}
+                              </ul> -->
+                              <a data-bs-toggle="modal">Check</a>
+                          </td>   
+                          <td>{{head.description}}</td>       
+                          <td>{{head.created_at}}</td>
+                          <td>{{head.updated_at}}</td>
+                          <td>
+                              <div style="display: inline-flex;">
+                                  <a class="delbutton btn btn-warning "  href="{% url 'edit-menu-food' head.id %}">Edit</a>&nbsp;
+                                  <form action="{% url 'delete-menu-food' head.id %}" method="post"
+                                      onclick="return confirm('Are You Sure to Delete')">
+                                      {% csrf_token %}
+                                      <input type="submit"  class="btn btn-danger delbutton"
+                                          value="Delete">
+                                  </form>
+                              </div>
+                          </td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+
+
+                  </table>
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <h4 class="text-center alert alert-warning">No Records</h4>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+  
+</div>
+<div class="modal fade" id="popupfood" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center ">
+          <div class="d-flex justify-content-center align-items-center">
+              <div class="foodDetails ">
+                  <div>
+                      <div class="foodprice1 px-4" id="foodprice1">
+                          
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% endblock %}

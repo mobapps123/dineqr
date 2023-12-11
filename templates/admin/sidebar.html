@@ -1,0 +1,97 @@
+{% load static %}
+<aside class="left-sidebar left_aside" data-sidebarbg="skin6" id="sidedis">
+    <!-- Sidebar scroll-->
+    <div class="scroll-sidebar">
+        <!-- Sidebar navigation-->
+        <nav class="sidebar-nav">
+            <ul id="sidebarnav" class="nav_bar_side">
+                <!-- User Profile-->
+                <li class="sidebar-item mt-3">
+                    <a class="sidebar-link waves-effect waves-dark sidebar-link link_sidebar"
+                        href="{% url 'admin-dashboard' %}" aria-expanded="false">
+                        <i class="fas fa-tachometer-alt  leftside_icon"></i>
+                        <span class="hide-menu">Dashboard</span>
+                    </a>
+                </li>
+                
+                <li class="sidebar-item onclickmenu commomShow">
+                    <a href="{% url 'show-users' %}"
+                        class="sidebar-link waves-effect waves-dark sidebar-link link_sidebar" aria-expanded="false">
+                        <i class="fas fa-users leftside_icon"></i>
+                        <span class="hide-menu">Manage Restaurants</span>
+                    </a>
+                </li>
+                <li class="sidebar-item onclickmenu commomShow">
+                    <a href="{% url 'show-image' %}"
+                        class="sidebar-link waves-effect waves-dark sidebar-link link_sidebar" aria-expanded="false">
+                        <i class="fas fa-users leftside_icon"></i>
+                        <span class="hide-menu">Manage Category Image</span>
+                    </a>
+                </li>
+                <li class="sidebar-item onclickmenu commomShow">
+                    <a href="{% url 'show_suggestion' %}"
+                        class="sidebar-link waves-effect waves-dark sidebar-link link_sidebar" aria-expanded="false">
+                        <i class="fas fa-users leftside_icon"></i>
+                        <span class="hide-menu">Manage Food Suggestion</span>
+                    </a>
+                </li>
+                <li class="sidebar-item onclickmenu2 commomShow">
+                    <a href="{% url 'show-subscription' %}"
+                        class="sidebar-link waves-effect waves-dark sidebar-link link_sidebar" aria-expanded="false">
+                        <i class="fas fa-subscript leftside_icon"></i>
+                        <span class="hide-menu">Manage Subscriptions</span>
+                    </a>
+                </li>
+                <li class="sidebar-item onclickmenu3 commomShow">
+                    <a href="{% url 'payament_details' %}"
+                        class="sidebar-link waves-effect waves-dark sidebar-link link_sidebar" aria-expanded="false">
+                        <i class="fas fa-dollar-sign leftside_icon"></i>
+                        <span class="hide-menu">Payments</span>
+                    </a>
+                </li>
+                <li class="sidebar-item onclickmenu4 commomShow">
+                    <a href="{% url 'show-notification' %}"
+                        class="sidebar-link waves-effect waves-dark sidebar-link link_sidebar" aria-expanded="false">
+                        <i class="fas fa-bell leftside_icon"></i>
+                        <span class="hide-menu">Notifications</span>
+                    </a>
+                </li>
+                <li class="sidebar-item onclickmenu4 commomShow">
+                    <a href="{% url 'show-termandcondition' %}"
+                        class="sidebar-link waves-effect waves-dark sidebar-link link_sidebar" aria-expanded="false">
+                        <i class="fas fa-file-contract leftside_icon"></i>
+                        <span class="hide-menu">Term And Conditions</span>
+                    </a>
+                </li>
+                <li class="sidebar-item onclickmenu4 commomShow">
+                    <a href="{% url 'show-privacyandpolicy' %}"
+                        class="sidebar-link waves-effect waves-dark sidebar-link link_sidebar" aria-expanded="false">
+                        <i class="fas fa-file-alt leftside_icon"></i>
+                        <span class="hide-menu">Privacy and Policy</span>
+                    </a>
+                </li>
+                </li>
+                
+                <li class="sidebar-item onclickmenu6 commomShow">
+                    <a href="{% url 'edit-admin' %}" class="sidebar-link waves-effect waves-dark sidebar-link link_sidebar" aria-expanded="false">
+                        <i class="fas fa-gear leftside_icon"></i>
+                        <span class="hide-menu">Setting</span>
+                    </a>
+                   
+                </li>
+                
+
+                <!-- <li class="sidebar-item">
+                    <a class="sidebar-link waves-effect waves-dark sidebar-link link_sidebar" href=""
+                        aria-expanded="false">
+                        <i class="fas fa-power-off leftside_icon"></i>
+                        <span class="hide-menu">Log Out</span>
+                    </a>
+                </li> -->
+            </ul>
+
+        </nav>
+        <!-- End Sidebar navigation -->
+    </div>
+    <!-- End Sidebar scroll-->
+</aside>

@@ -1,0 +1,63 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-wrapper wrapper_page ">
+    <div class="page-breadcrumb container-fluid responsive_container ">
+        <div class="row align-items-center">
+            <div class="col-lg-9 col-md-4 col-sm-4 col-xs-12 mb-3">
+                <h2 class="page-title title_page ">Dashboard</h2>
+            </div>
+        </div>
+        <div class="dashboardBox">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <a href="" class="col-lg-4 round_box col-md-12 col-sm-12" style="text-decoration: none;">
+                        <div class="white-box analytics-info box_white counter" style="background-color: #f8f9fa;border-left: 4px solid #22c1f8;">
+                            <h3 style="text-align: center; color: #22c1f8;"><b><i class="fa fa-utensils"></i> Total Restaurant</b> </h3>
+                            <p style="text-align: center; font-size: 35px; color: #22c1f8;" class="fw-bold">{{total_user}}
+                            </p>
+                        </div>
+                    </a>
+                    <a href="" class="col-lg-4 round_box col-md-12 col-sm-12" style="text-decoration: none;">
+                        <div class="white-box analytics-info box_white counter" style="background-color: #f8f9fa; border-left: 4px solid #fa8783;">
+                            <h3 style="text-align: center; color: #fa8783;"><b>Active Restaurant</b></h3>
+                            <p style="text-align: center; font-size: 35px; color: #fa8783;" class="fw-bold">{{active}}</p>
+                        </div>
+                    </a>
+                    <a href="" class="col-lg-4 round_box col-md-12 col-sm-12" style="text-decoration: none;">
+                        <div class="white-box analytics-info box_white counter" style="background-color: #f8f9fa;border-left: 4px solid #febd56;">
+                            <h3 style="text-align: center; color: #febd56;"><b>Inactive Restaurant</b></h3>
+                            <p style="text-align: center; font-size: 35px; color: #febd56;" class="fw-bold">{{in_active}}
+                            </p>
+                        </div>
+                    </a>
+                    <a href="" class="col-lg-4 round_box col-md-12 col-sm-12" style="text-decoration: none;">
+                        <div class="white-box analytics-info box_white counter" style="background-color: #f8f9fa;border-left: 4px solid #27a012;">
+                            <h3 style="text-align: center; color: #27a012;"><b>Total Subscription</b></h3>
+                            <p style="text-align: center; font-size: 35px; color: #27a012;" class="fw-bold">{{subs}}
+                            </p>
+                        </div>
+                    </a>
+                    <!-- <a href="" class="col-lg-5 round_box col-md-4 col-sm-1" style="text-decoration: none;">
+                        <div class="white-box analytics-info box_white counter" style="background-color: lightgrey;">
+                            <h3 style="text-align: center;" class="text-info"><b>Total Restaurant</b></h3>
+                            <p style="text-align: center; font-size: 35px; color: black;" class="fw-bold">
+                                {{total_restaurant}}</p>
+                        </div>
+                    </a> -->
+                </div>
+                <div>
+                    {% if messages %}
+                    {% for message in messages %}
+                    {% if message.tags %}
+                    <script>swal("FoodMenu!", "{{message}}", "{{message.tags}}");</script>
+                    {% endif %}
+                    {% endfor %}
+                    {% endif %}
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
